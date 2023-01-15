@@ -1,0 +1,33 @@
+﻿<Window x:Class="RainState.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RainState"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <TreeView Grid.Column="0" x:Name="TagTree" Background="#242424" Foreground="#eee">
+            <TreeView.Resources>
+                <Style x:Key="{x:Type TreeViewItem}" TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="Foreground" Value="#eee"/>
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#555" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#444" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#eee" />
+                    </Style.Resources>
+                </Style>
+            </TreeView.Resources>
+        </TreeView>
+
+        <Grid Grid.Column="1" Background="#323232" Margin="5,0,0,0" >
+            <local:TagValueTextBox Margin="10,10,0,0" VerticalAlignment="Top" Height="20" Width="100" HorizontalAlignment="Left" />
+        </Grid>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left"/>
+
+    </Grid>
+</Window>
