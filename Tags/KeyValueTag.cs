@@ -1,21 +1,22 @@
-﻿using System;
+﻿using RainState.Forms;
+using System;
+using System.Diagnostics;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace RainState.Tags
 {
     public class KeyValueTag : Tag
     {
         private string key;
-        private TextBlock? KeyText;
-        private MenuItem? ValueEditMenu;
 
         public Tag? Value;
         public bool Alternative;
 
-        public override string Name { get => Key; set => Key = value; }
+        public override string Name { get => Value is null || Value.Name == "" ? Key : $"{Key}: {Value.Name}"; set => Key = value; }
 
         public string Key
         {
@@ -23,9 +24,30 @@ namespace RainState.Tags
             set
             {
                 key = value;
+                UpdateNodeName();
+                NameChanged();
+            }
+        }
 
-                if (KeyText is not null)
-                    KeyText.Text = value;
+        public string? StringValue 
+        {
+            get 
+            {
+                if (Value is ValueTag value)
+                    return value.Value;
+                else if (Value is KeyValueTag tag)
+                    return tag.StringValue;
+                return null;
+            }
+            set
+            {
+                if (value is null)
+                    return;
+
+                if (Value is ValueTag valuetag)
+                    valuetag.Value = value;
+                else if (Value is KeyValueTag tag)
+                    tag.StringValue = value;
             }
         }
 
@@ -53,71 +75,38 @@ namespace RainState.Tags
             Value?.Serialize(writer);
         }
 
-        protected override FrameworkElement CreateTreeNodeInternal()
+        protected override TreeNode CreateTreeNodeInternal()
         {
-            FrameworkElement value = Value?.CreateTreeNode() ?? new TextBlock();
-            KeyText = new TextBlock { Text = Key };
+            TreeNode value = Value?.CreateTreeNode() ?? new TreeNode();
 
-            MenuItem setKey = new MenuItem()
+            //if (Value is ValueTag)
+            //    Debugger.Break();
+
+            value.ContextMenuStrip ??= new();
+
+            value.ContextMenuStrip.Items.Add("Edit name", null, (_, _) => 
             {
-                Header = "Edit name"
-            };
-            setKey.Click += (_, _) => StringEditDialogue.Show(Key, k => Key = k);
+                StringEditDialogue.ShowDialog(Key, k => Key = k);
+            }).Tag = ("name", this);
 
-            ContextMenu ctxm = new()
+            value.ContextMenuStrip.Opening += (sender, _) =>
             {
-                Items = { setKey }
-            };
-
-            ValueEditMenu = new MenuItem()
-            {
-                Header = "Edit value"
-            };
-            ValueEditMenu.Click += (_, _) =>
-            {
-                if (Value is not ValueTag vt)
-                    return;
-
-                StringEditDialogue.Show(vt.Value, v => vt.Value = v);
-            };
-
-            ctxm.Opened += (_, _) =>
-            {
-                ctxm.Items.Remove(ValueEditMenu);
-
-                if (Value is ValueTag vt)
-                    ctxm.Items.Add(ValueEditMenu);
-            };
-
-            if (value is TreeViewItem item)
-            {
-                item.Header = new StackPanel
-                {
-                    Orientation = Orientation.Horizontal,
-                    Children =
+                if (sender is ContextMenuStrip strip)
+                    foreach (ToolStripItem item in strip.Items)
                     {
-                        KeyText,
-                        new TextBlock { Text = $" <{Value!.TagId}>" },
-                    },
-                    ContextMenu = ctxm
-                };
-                item.ContextMenu = ctxm;
-
-                return item;
-            }
-
-            return new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                Children =
-                {
-                    //new TextBlock { Text = TagId + "$" },
-                    KeyText,
-                    new TextBlock { Text = ": " },
-                    value
-                },
-                ContextMenu = ctxm
+                        if (item.Tag is (string type, KeyValueTag tag) && type == "name" && tag == this)
+                        {
+                            item.Text = $"Edit name ({Key})";
+                        }
+                    }
             };
+
+            string name = Key;
+            if (value.Text != "")
+                name = $"{Key}: {value.Text}";
+
+            value.Text = name;
+            return value;
         }
 
         public override string ToString()
@@ -130,6 +119,20 @@ namespace RainState.Tags
         public override T GetTag<T>(string tagId, string name)
         {
             throw new InvalidOperationException();
+        }
+
+        protected override void ChildNameChanged(Tag child, string name)
+        {
+            UpdateNodeName();
+            NameChanged();
+        }
+
+        private void UpdateNodeName()
+        {
+            if (TreeNode is not null)
+            {
+                TreeNode.Text = Name;
+            }
         }
 
         public T GetValue<T>() where T : Tag

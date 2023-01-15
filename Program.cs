@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RainState.Forms;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -7,38 +8,36 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Ribbon;
+using System.Windows.Forms;
 
 namespace RainState
 {
     public static class Program
     {
-
         [STAThread]
         public static void Main()
         {
-            string savefile = File.ReadAllText("../../../sav_2.txt");
+            Application.EnableVisualStyles();
 
+            string savefile = File.ReadAllText("../../../sav_3.txt");
             StateFile file = StateFile.Load(savefile) ?? throw new NotImplementedException();
 
-            Application app = new();
-            MainWindow main = new();
+            MainForm main = new();
 
-            FrameworkElement element = file.MainTag.CreateTreeNode();
+            TreeNode node = file.MainTag.CreateTreeNode();
 
-            if (element is TreeViewItem item)
-                foreach (object child in item.Items.Cast<object>().ToArray())
+            if (node.Nodes.Count > 0)
+                foreach (TreeNode child in node.Nodes.Cast<TreeNode>().ToArray())
                 {
-                    item.Items.Remove(child);
-                    main.TagTree.Items.Add(child);
+                    node.Nodes.Remove(child);
+                    main.StateTree.Nodes.Add(child);
                 }
             else
-                main.TagTree.Items.Add(element);
+                main.StateTree.Nodes.Add(node);
 
-            app.Run(main);
+            Application.Run(main);
 
-            using (FileStream fs = File.Create("../../../sav_3.txt"))
+            using (FileStream fs = File.Create("../../../sav.txt"))
                 file.Save(fs);
         }
 

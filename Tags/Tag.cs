@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Packaging;
 using System.Text;
 using System.Windows;
+using System.Windows.Forms;
 
 namespace RainState.Tags
 {
@@ -19,26 +20,32 @@ namespace RainState.Tags
         public string TagId;
         public Tag? Parent;
 
-        internal FrameworkElement? TreeNode { get; private set; }
+        internal TreeNode TreeNode { get; private set; }
 
         public Tag(string id)
         {
             TagId = id;
         }
 
-        public FrameworkElement CreateTreeNode()
+        public TreeNode CreateTreeNode()
         {
             return TreeNode = CreateTreeNodeInternal();
         }
 
         public abstract void Serialize(StreamWriter writer);
-        protected abstract FrameworkElement CreateTreeNodeInternal();
+        protected abstract TreeNode CreateTreeNodeInternal();
         public abstract T GetTag<T>(string tagId, string name) where T : Tag;
 
         public virtual bool TryConvert<T>(out T newTag) where T : Tag
         {
             newTag = default!;
             return false;
+        }
+        protected virtual void ChildNameChanged(Tag child, string name) { }
+
+        protected void NameChanged()
+        {
+            Parent?.ChildNameChanged(this, Name);
         }
 
         public static T Convert<T>(Tag? tag, string tagId, string name) where T : Tag

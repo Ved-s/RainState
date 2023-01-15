@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+using System.Windows.Forms;
 
 namespace RainState.Tags
 {
@@ -37,39 +38,46 @@ namespace RainState.Tags
 
         private void TagsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (TreeNode is not TreeViewItem item)
+            if (TreeNode is null)
                 return;
-
-            ItemCollection treeItems = item.Items;
 
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     if (Tags[^1] is not null)
-                        treeItems.Add(Tags[^1]?.CreateTreeNode());
+                    {
+                        Tag tag = Tags[^1]!;
+                        TreeNode tagNode = tag.CreateTreeNode();
+                        AddContextMenus(tagNode, tag);
+                        TreeNode.Nodes.Add(tagNode);
+                    }
                     break;
-
+            
                 case NotifyCollectionChangedAction.Remove:
-
+            
                     if (e.OldItems![0] is null)
                         return;
-
+            
                     int index = e.OldStartingIndex;
                     for (int i = index; i >= 0; i--)
                         if (Tags[i] is null)
                             index--;
-
-                    treeItems.Remove(index);
+            
+                    TreeNode.Nodes.RemoveAt(index);
                     break;
-
+            
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Move:
                 case NotifyCollectionChangedAction.Reset:
-                    treeItems.Clear();
+                    TreeNode.Nodes.Clear();
                     foreach (Tag? tag in Tags)
                         if (tag is not null)
-                            item.Items.Add(tag?.CreateTreeNode());
-
+                        {
+                            TreeNode tagNode = tag.CreateTreeNode();
+                            AddContextMenus(tagNode, tag);
+                            TreeNode.Nodes.Add(tagNode);
+                        }
+            
                     break;
             }
         }
@@ -88,20 +96,21 @@ namespace RainState.Tags
             }
         }
 
-        protected override FrameworkElement CreateTreeNodeInternal()
+        protected override TreeNode CreateTreeNodeInternal()
         {
-            TreeViewItem item = new();
+            TreeNode node = new();
 
             foreach (Tag? tag in Tags)
                 if (tag is not null)
-                    item.Items.Add(tag?.CreateTreeNode());
+                {
+                    TreeNode tagNode = tag.CreateTreeNode();
+                    AddContextMenus(tagNode, tag);
+                    if (tag is ListTag list && tagNode.Text == "")
+                        tagNode.Text = list.Tags.FirstOrDefault(t => t is not null)?.Name ?? "";
+                    node.Nodes.Add(tagNode);
+                }
 
-            if (Tags.Count > 0 && Tags[0] is ValueTag value)
-            {
-                item.Header = value.Value;
-            }
-
-            return item;
+            return node;
         }
 
         public override T GetTag<T>(string tagId, string name)
@@ -126,6 +135,16 @@ namespace RainState.Tags
             T newTag = Convert<T>(null, tagId, name);
             Tags.Add(newTag);
             return newTag;
+        }
+
+        void AddContextMenus(TreeNode node, Tag tag)
+        {
+            node.ContextMenuStrip ??= new();
+
+            node.ContextMenuStrip.Items.Add("Remove", null, (_, _) =>
+            {
+                Tags.Remove(tag);
+            });
         }
     }
 }

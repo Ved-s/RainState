@@ -4,8 +4,9 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
+    <UseWPF>False</UseWPF>
     <StartupObject>RainState.Program</StartupObject>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
 </Project>

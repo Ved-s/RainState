@@ -1,8 +1,7 @@
-﻿using System;
+﻿using RainState.Forms;
+using System;
 using System.IO;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace RainState.Tags
 {
@@ -19,8 +18,9 @@ namespace RainState.Tags
             {
                 this.value = value;
 
-                if (TreeNode is TextBlock text)
-                    text.Text = value;
+                if (TreeNode is not null)
+                    TreeNode.Text = value;
+                NameChanged();
             }
         }
 
@@ -39,9 +39,17 @@ namespace RainState.Tags
             writer.Write(Value);
         }
 
-        protected override FrameworkElement CreateTreeNodeInternal()
+        protected override TreeNode CreateTreeNodeInternal()
         {
-            return new TextBlock { Text = Value };
+            TreeNode node = new(Value);
+
+            node.ContextMenuStrip ??= new();
+            node.ContextMenuStrip.Items.Add("Edit value", null, (_, _) =>
+            {
+                StringEditDialogue.ShowDialog(Value, k => Value = k);
+            });
+
+            return node;
         }
 
         public override string ToString()
