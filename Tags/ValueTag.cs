@@ -26,7 +26,7 @@ namespace RainState.Tags
 
         public ValueTag() : base("")
         {
-            this.value = "";
+            value = "";
         }
 
         public ValueTag(string value) : base("")
@@ -41,7 +41,7 @@ namespace RainState.Tags
 
         protected override TreeNode CreateTreeNodeInternal()
         {
-            TreeNode node = new(Value);
+            TreeNode node = new(Value.ConstrainLength(64, 256));
 
             node.ContextMenuStrip ??= new();
             node.ContextMenuStrip.Items.Add("Edit value", null, (_, _) =>

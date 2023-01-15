@@ -7,7 +7,7 @@ using RainState.Tags;
 
 namespace RainState
 {
-    class StateFile
+    public class StateFile
     {
         static Regex ChecksumRegex = new(@"^[0-9a-fA-F]{32}", RegexOptions.Compiled);
         static byte[] ChecksumSalt = Encoding.UTF8.GetBytes("WY+Nhg+PuYNEz6WVOo9DpOoPZ11fT3DuTU9WigSP9yeKT8U+EQ/EghqPxKqbj8AAIA/pihwPzuncT9L2XI/In50PzpJdj9D4n");
@@ -38,16 +38,16 @@ namespace RainState
         {
             if (!HasChecksum)
             {
-                MainTag.Serialize(new(stream, encoding: Encoding.UTF8, leaveOpen: true));
+                MainTag.Serialize(new(stream, encoding: Encoding.UTF8, leaveOpen: true) { AutoFlush = true });
                 return;
             }
 
             MemoryStream ms = new();
-            MainTag.Serialize(new(ms, encoding: Encoding.UTF8, leaveOpen: true));
+            MainTag.Serialize(new(ms, encoding: Encoding.UTF8, leaveOpen: true) { AutoFlush = true });
             ms.Position = 0;
             string checksum = CalculateChecksum(ms.GetBuffer(), 0, (int)ms.Length);
 
-            using (StreamWriter writer = new(stream, encoding: Encoding.UTF8, leaveOpen: true))
+            using (StreamWriter writer = new(stream, encoding: Encoding.UTF8, leaveOpen: true) { AutoFlush = true })
             {
                 writer.Write(checksum);
             }

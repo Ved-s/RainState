@@ -20,7 +20,7 @@ namespace RainState.Tags
         public string TagId;
         public Tag? Parent;
 
-        internal TreeNode TreeNode { get; private set; }
+        internal TreeNode? TreeNode { get; private set; }
 
         public Tag(string id)
         {

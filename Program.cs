@@ -18,29 +18,7 @@ namespace RainState
         public static void Main()
         {
             Application.EnableVisualStyles();
-
-            string savefile = File.ReadAllText("../../../sav_3.txt");
-            StateFile file = StateFile.Load(savefile) ?? throw new NotImplementedException();
-
-            MainForm main = new();
-
-            TreeNode node = file.MainTag.CreateTreeNode();
-
-            if (node.Nodes.Count > 0)
-                foreach (TreeNode child in node.Nodes.Cast<TreeNode>().ToArray())
-                {
-                    node.Nodes.Remove(child);
-                    main.StateTree.Nodes.Add(child);
-                }
-            else
-                main.StateTree.Nodes.Add(node);
-
-            Application.Run(main);
-
-            using (FileStream fs = File.Create("../../../sav.txt"))
-                file.Save(fs);
+            Application.Run(new MainForm());
         }
-
-        
     }
 }

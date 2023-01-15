@@ -16,7 +16,24 @@ namespace RainState.Tags
         public Tag? Value;
         public bool Alternative;
 
-        public override string Name { get => Value is null || Value.Name == "" ? Key : $"{Key}: {Value.Name}"; set => Key = value; }
+        public override string Name 
+        { 
+            get 
+            {
+                if (Value is null || Value.Name == "")
+                {
+                    if (Value is not null && Value.TagId != TagId)
+                        return $"{Key} <{Value.TagId}> ";
+                    return Key;
+                }
+
+                if (Value.TagId != TagId && Value.TagId != "")
+                    return $"<{Value.TagId}> {Key}: {Value.Name}";
+
+                return $"{Key}: {Value.Name}";
+            }
+            set => Key = value; 
+        }
 
         public string Key
         {
@@ -101,11 +118,7 @@ namespace RainState.Tags
                     }
             };
 
-            string name = Key;
-            if (value.Text != "")
-                name = $"{Key}: {value.Text}";
-
-            value.Text = name;
+            value.Text = Name.ConstrainLength(64, 256);
             return value;
         }
 
@@ -131,14 +144,14 @@ namespace RainState.Tags
         {
             if (TreeNode is not null)
             {
-                TreeNode.Text = Name;
+                TreeNode.Text = Name.ConstrainLength(64, 256);
             }
         }
 
         public T GetValue<T>() where T : Tag
         {
             if (Value is not T t)
-                t = Tag.Convert<T>(Value, Value?.TagId ?? TagId, Value?.Name ?? Name);
+                t = Convert<T>(Value, Value?.TagId ?? TagId, Value?.Name ?? Name);
 
             return t;
         }
