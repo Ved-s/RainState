@@ -20,6 +20,12 @@ namespace RainState.Forms
         public StateFile? CurrentFile { get; private set; }
         public string? CurrentFilePath { get; private set; }
 
+        public RecursiveTagWatchArrays WatchArrays = new(0);
+        public TagWatch TestWatch = new("progDiv@MISCPROG/mpd$/mpd@MENUREGION")
+        {
+            WatchChildren = false
+        };
+
         public MainForm()
         {
             Instance = this;
@@ -28,17 +34,9 @@ namespace RainState.Forms
             Menu.ForeColor = SystemColors.ControlLightLight;
             Menu.RenderMode = ToolStripRenderMode.Professional;
             Menu.Renderer = new ToolStripProfessionalRenderer(new DarkColorTable());
-        }
 
-        class DarkColorTable : ProfessionalColorTable
-        {
-            public override Color MenuStripGradientBegin => Color.FromArgb(40, 40, 40);
-            public override Color MenuStripGradientEnd   => Color.FromArgb(40, 40, 40);
-
-            public override Color MenuItemBorder => Color.FromArgb(100, 100, 100);
-
-            public override Color MenuItemSelectedGradientBegin => Color.FromArgb(64, 64, 64);
-            public override Color MenuItemSelectedGradientEnd   => Color.FromArgb(64, 64, 64);
+            WatchArrays.Register(TestWatch);
+            TestWatch.OnTagChanged = (t) => Debugger.Break();
         }
 
         private void Menu_Open_Click(object sender, EventArgs e)
@@ -65,9 +63,7 @@ namespace RainState.Forms
 
             Menu_Save.Enabled = true;
             Menu_SaveAs.Enabled = true;
-            
         }
-
         private void Menu_Save_Click(object sender, EventArgs e)
         {
             if (CurrentFile is null || CurrentFilePath is null)
@@ -76,7 +72,6 @@ namespace RainState.Forms
             using FileStream fs = File.Create(CurrentFilePath);
             CurrentFile.Save(fs);
         }
-
         private void Menu_SaveAs_Click(object sender, EventArgs e)
         {
             if (CurrentFile is null)
@@ -95,6 +90,22 @@ namespace RainState.Forms
             CurrentFilePath = dialog.FileName;
             using FileStream fs = File.Create(dialog.FileName);
             CurrentFile.Save(fs);
+        }
+
+        internal void TagChanged(Tag tag)
+        {
+            WatchArrays.TagChanged(tag);
+        }
+
+        class DarkColorTable : ProfessionalColorTable
+        {
+            public override Color MenuStripGradientBegin => Color.FromArgb(40, 40, 40);
+            public override Color MenuStripGradientEnd   => Color.FromArgb(40, 40, 40);
+
+            public override Color MenuItemBorder => Color.FromArgb(100, 100, 100);
+
+            public override Color MenuItemSelectedGradientBegin => Color.FromArgb(64, 64, 64);
+            public override Color MenuItemSelectedGradientEnd   => Color.FromArgb(64, 64, 64);
         }
     }
 }

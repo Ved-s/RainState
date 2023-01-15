@@ -21,6 +21,8 @@ namespace RainState.Tags
                 if (TreeNode is not null)
                     TreeNode.Text = value;
                 NameChanged();
+                Changed();
+
             }
         }
 

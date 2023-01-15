@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RainState.Forms;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -6,6 +7,7 @@ using System.IO.Packaging;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace RainState.Tags
 {
@@ -15,8 +17,6 @@ namespace RainState.Tags
         {
             ["WINSTATE"] = "ws",
         };
-
-        static char[] QueryTagTypes = new[] { '@', '$', '#' };
 
         public virtual string DisplayName { get => Name; }
         public abstract string Name { get; set; }
@@ -50,52 +50,78 @@ namespace RainState.Tags
         {
             Parent?.ChildNameChanged(this, Name);
         }
+        protected void Changed()
+        {
+            MainForm.Instance.TagChanged(this);
+        }
 
-        // progDiv@MISCPROG/progDiv$/mpd@MENUREGION/mpd#
+        // progDiv@MISCPROG/mpd$/mpd@MENUREGION/#
         public Tag QueryTag(string query)
         {
             Tag tag = this;
 
-            ReadOnlySpan<char> rest = query;
-            string? lastTagId = null;
-
-            while (!rest.IsEmpty)
+            foreach (TagQueryElement tagelement in new TagQueryPathEnumerator(query))
             {
-                ReadOnlySpan<char> current;
-
-                int pathSep = rest.IndexOf('/');
-                if (pathSep < 0)
+                tag = tagelement.Type switch
                 {
-                    current = rest;
-                    rest = ReadOnlySpan<char>.Empty;
-                }
-                else
-                {
-                    current = rest.Slice(0, pathSep);
-                    rest = rest.Slice(pathSep + 1);
-                }
-
-                int typeIdx = current.IndexOfAny(QueryTagTypes);
-
-                if (typeIdx < 0)
-                    throw new InvalidDataException("Query missing tag type");
-                
-                string id = typeIdx > 0 ? new(current.Slice(0, typeIdx))
-                    : lastTagId ?? throw new InvalidDataException("Cannot implicitly define tag id in query");
-                string name = new(current.Slice(typeIdx + 1));
-
-                char type = current[typeIdx];
-
-                tag = type switch
-                {
-                    '@' => tag.GetTag<KeyValueTag>(id, name),
-                    '$' => tag.GetTag<ListTag>(id, name),
-                    '#' => tag.GetTag<ValueTag>(id, name),
-                    _ => throw new InvalidDataException($"Invalid tag type in query: {type}")
+                    TagType.Pair =>  tag.GetTag<KeyValueTag>(tagelement.Id, tagelement.Name),
+                    TagType.List =>  tag.GetTag<ListTag>    (tagelement.Id, tagelement.Name),
+                    TagType.Value => tag.GetTag<ValueTag>   (tagelement.Id, tagelement.Name),
+                    _ => throw new InvalidDataException($"Invalid tag type from query enumerator: {tagelement.Type}")
                 };
             }
 
             return tag;
+        }
+
+        public Tag GetParent(int level)
+        {
+            int parents = 0;
+            Tag tag = this;
+            while (tag.Parent is not null)
+            {
+                tag = tag.Parent;
+                parents++;
+            }
+
+            int targetParent = parents - level;
+            tag = this;
+            while (targetParent > 0 && tag.Parent is not null)
+                tag = tag.Parent;
+
+            return tag;
+        }
+
+        public bool MatchQuery(ReadOnlySpan<TagQueryElement> path, bool searchMatchingParent = true)
+        {
+            if (path.IsEmpty)
+                return true;
+
+            while (!path.IsEmpty)
+            {
+                TagQueryElement element = path[^1];
+                bool type = element.Type switch
+                {
+                    TagType.Pair => this is KeyValueTag,
+                    TagType.List => this is ListTag,
+                    TagType.Value => this is ValueTag,
+                    _ => false
+                };
+                if (!type || element.Name != "" && element.Name != Name || TagId != "" && element.Id != TagId)
+                {
+                    if (!searchMatchingParent)
+                        return false;
+                    break;
+                }
+                searchMatchingParent = false;
+
+                break;
+            }
+
+            if (path.IsEmpty)
+                return false;
+
+            return Parent?.MatchQuery(path[..^1], searchMatchingParent) ?? !searchMatchingParent;
         }
 
         public static T Convert<T>(Tag? parent, Tag? tag, string tagId, string name) where T : Tag
@@ -219,6 +245,5 @@ namespace RainState.Tags
             id = str.Substring(lt + 1, gt - lt - 2);
             return true;
         }
-
     }
 }

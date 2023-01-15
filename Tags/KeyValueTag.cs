@@ -43,6 +43,7 @@ namespace RainState.Tags
                 key = value;
                 UpdateNodeName();
                 NameChanged();
+                Changed();
             }
         }
 

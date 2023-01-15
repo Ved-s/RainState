@@ -38,6 +38,7 @@ namespace RainState.Tags
 
         private void TagsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            Changed();
             if (TreeNode is null)
                 return;
 
