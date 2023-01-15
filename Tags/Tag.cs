@@ -16,6 +16,9 @@ namespace RainState.Tags
             ["WINSTATE"] = "ws",
         };
 
+        static char[] QueryTagTypes = new[] { '@', '$', '#' };
+
+        public virtual string DisplayName { get => Name; }
         public abstract string Name { get; set; }
         public string TagId;
         public Tag? Parent;
@@ -48,13 +51,61 @@ namespace RainState.Tags
             Parent?.ChildNameChanged(this, Name);
         }
 
-        public static T Convert<T>(Tag? tag, string tagId, string name) where T : Tag
+        // progDiv@MISCPROG/progDiv$/mpd@MENUREGION/mpd#
+        public Tag QueryTag(string query)
+        {
+            Tag tag = this;
+
+            ReadOnlySpan<char> rest = query;
+            string? lastTagId = null;
+
+            while (!rest.IsEmpty)
+            {
+                ReadOnlySpan<char> current;
+
+                int pathSep = rest.IndexOf('/');
+                if (pathSep < 0)
+                {
+                    current = rest;
+                    rest = ReadOnlySpan<char>.Empty;
+                }
+                else
+                {
+                    current = rest.Slice(0, pathSep);
+                    rest = rest.Slice(pathSep + 1);
+                }
+
+                int typeIdx = current.IndexOfAny(QueryTagTypes);
+
+                if (typeIdx < 0)
+                    throw new InvalidDataException("Query missing tag type");
+                
+                string id = typeIdx > 0 ? new(current.Slice(0, typeIdx))
+                    : lastTagId ?? throw new InvalidDataException("Cannot implicitly define tag id in query");
+                string name = new(current.Slice(typeIdx + 1));
+
+                char type = current[typeIdx];
+
+                tag = type switch
+                {
+                    '@' => tag.GetTag<KeyValueTag>(id, name),
+                    '$' => tag.GetTag<ListTag>(id, name),
+                    '#' => tag.GetTag<ValueTag>(id, name),
+                    _ => throw new InvalidDataException($"Invalid tag type in query: {type}")
+                };
+            }
+
+            return tag;
+        }
+
+        public static T Convert<T>(Tag? parent, Tag? tag, string tagId, string name) where T : Tag
         {
             if (tag is not null && tag.TryConvert(out T newTag))
                 return newTag;
 
             newTag = (T)Activator.CreateInstance(typeof(T))!;
 
+            newTag.Parent = parent;
             newTag.TagId = tagId;
             newTag.Name = name;
             return newTag;

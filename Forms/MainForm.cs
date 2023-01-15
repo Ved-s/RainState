@@ -1,7 +1,9 @@
-﻿using System;
+﻿using RainState.Tags;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -63,6 +65,7 @@ namespace RainState.Forms
 
             Menu_Save.Enabled = true;
             Menu_SaveAs.Enabled = true;
+            
         }
 
         private void Menu_Save_Click(object sender, EventArgs e)

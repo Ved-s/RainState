@@ -127,12 +127,12 @@ namespace RainState.Tags
                 if (tag is T t)
                     return t;
 
-                tag = Convert<T>(tag, tagId, name);
+                tag = Convert<T>(this, tag, tagId, name);
                 Tags[i] = tag;
                 return (T)tag;
             }
 
-            T newTag = Convert<T>(null, tagId, name);
+            T newTag = Convert<T>(this, null, tagId, name);
             Tags.Add(newTag);
             return newTag;
         }

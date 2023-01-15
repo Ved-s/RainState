@@ -16,11 +16,11 @@ namespace RainState.Tags
         public Tag? Value;
         public bool Alternative;
 
-        public override string Name 
+        public override string DisplayName 
         { 
             get 
             {
-                if (Value is null || Value.Name == "")
+                if (Value is null || Value.DisplayName == "")
                 {
                     if (Value is not null && Value.TagId != TagId)
                         return $"{Key} <{Value.TagId}> ";
@@ -28,12 +28,12 @@ namespace RainState.Tags
                 }
 
                 if (Value.TagId != TagId && Value.TagId != "")
-                    return $"<{Value.TagId}> {Key}: {Value.Name}";
+                    return $"<{Value.TagId}> {Key}: {Value.DisplayName}";
 
-                return $"{Key}: {Value.Name}";
+                return $"{Key}: {Value.DisplayName}";
             }
-            set => Key = value; 
         }
+        public override string Name { get => Key; set => Key = value; }
 
         public string Key
         {
@@ -118,7 +118,7 @@ namespace RainState.Tags
                     }
             };
 
-            value.Text = Name.ConstrainLength(64, 256);
+            value.Text = DisplayName.ConstrainLength(64, 256);
             return value;
         }
 
@@ -131,7 +131,10 @@ namespace RainState.Tags
 
         public override T GetTag<T>(string tagId, string name)
         {
-            throw new InvalidOperationException();
+            if (Value is not T t)
+                t = Convert<T>(this, Value, Value?.TagId ?? TagId, Value?.Name ?? Name);
+
+            return t;
         }
 
         protected override void ChildNameChanged(Tag child, string name)
@@ -144,16 +147,8 @@ namespace RainState.Tags
         {
             if (TreeNode is not null)
             {
-                TreeNode.Text = Name.ConstrainLength(64, 256);
+                TreeNode.Text = DisplayName.ConstrainLength(64, 256);
             }
-        }
-
-        public T GetValue<T>() where T : Tag
-        {
-            if (Value is not T t)
-                t = Convert<T>(Value, Value?.TagId ?? TagId, Value?.Name ?? Name);
-
-            return t;
         }
     }
 }
