@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace RainState
+namespace RainState.TagControls
 {
     public class TagWatchController : Panel, ITagControl
     {

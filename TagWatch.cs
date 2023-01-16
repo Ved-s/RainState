@@ -1,4 +1,5 @@
-﻿using RainState.Tags;
+﻿using RainState.TagControls;
+using RainState.Tags;
 using System;
 using System.Windows.Forms;
 

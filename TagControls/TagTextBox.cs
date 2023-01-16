@@ -7,17 +7,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RainState
+namespace RainState.TagControls
 {
     public class TagTextBox : TextBox, ITagControl
     {
         private string? tagQuery;
 
-        public string TagQuery 
+        public string TagQuery
         {
             get => tagQuery!;
-            set 
-            { 
+            set
+            {
                 tagQuery = value;
                 TagWatcher = new(value)
                 {
@@ -53,7 +53,7 @@ namespace RainState
         {
             base.OnTextChanged(e);
 
-            if (ChangingText)
+            if (ChangingText || Controller is null)
                 return;
 
             TagWatcher.Enabled = false;
