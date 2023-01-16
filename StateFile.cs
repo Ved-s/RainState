@@ -38,16 +38,21 @@ namespace RainState
         {
             if (!HasChecksum)
             {
-                MainTag.Serialize(new(stream, encoding: Encoding.UTF8, leaveOpen: true) { AutoFlush = true });
+                MainTag.Serialize(new(stream, encoding: new UTF8Encoding(), leaveOpen: true) { AutoFlush = true });
                 return;
             }
 
             MemoryStream ms = new();
-            MainTag.Serialize(new(ms, encoding: Encoding.UTF8, leaveOpen: true) { AutoFlush = true });
+            StreamWriter writer = new(ms, encoding: new UTF8Encoding(), leaveOpen: true) 
+            {
+                AutoFlush = true 
+            };
+
+            MainTag.Serialize(writer);
             ms.Position = 0;
             string checksum = CalculateChecksum(ms.GetBuffer(), 0, (int)ms.Length);
 
-            using (StreamWriter writer = new(stream, encoding: Encoding.UTF8, leaveOpen: true) { AutoFlush = true })
+            using (writer = new(stream, encoding: new UTF8Encoding(), leaveOpen: true) { AutoFlush = true })
             {
                 writer.Write(checksum);
             }

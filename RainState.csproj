@@ -9,4 +9,10 @@
     <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Update="TagControls\IntegersArrayTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

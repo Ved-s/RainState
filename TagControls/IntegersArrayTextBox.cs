@@ -1,11 +1,15 @@
 ﻿using RainState.Tags;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RainState.TagControls
 {
-    public class IntegersArrayCheckBox : CheckBox, ITagControl
+    public class IntegersArrayTextBox : TextBox, ITagControl
     {
         private string? tagQuery;
 
@@ -30,11 +34,11 @@ namespace RainState.TagControls
         [Browsable(false)]
         public TagWatchController? Controller { get; set; }
 
-        bool ChangingState = false;
+        bool ChangingText = false;
         public void RefreshTag(Tag? parent)
         {
             Tag? tag = parent?.QueryTag(TagQuery, false);
-            UpdateChecked(tag);
+            UpdateText(tag);
         }
 
         void OnTagChanged(Tag tag)
@@ -42,33 +46,14 @@ namespace RainState.TagControls
             if (tag is not ValueTag)
                 return;
 
-            UpdateChecked(tag);
+            UpdateText(tag);
         }
 
-        void UpdateChecked(Tag? tag)
+        protected override void OnTextChanged(EventArgs e)
         {
-            ChangingState = true;
-            if (tag is ValueTag value)
-            {
-                string[] split = value.Value.Split(',');
-                if (split.Length <= IntegerIndex)
-                    Checked = false;
+            base.OnTextChanged(e);
 
-                else
-                    Checked = split[IntegerIndex] == "1";
-            }
-            else
-            {
-                Checked = false;
-            }
-            ChangingState = false;
-        }
-
-        protected override void OnCheckedChanged(EventArgs e)
-        {
-            base.OnCheckedChanged(e);
-
-            if (ChangingState || Controller is null)
+            if (ChangingText || Controller is null)
                 return;
 
             TagWatcher.Enabled = false;
@@ -79,25 +64,29 @@ namespace RainState.TagControls
                 if (IntegerIndex >= split.Length)
                     Array.Resize(ref split, IntegerIndex + 1);
 
-                split[IntegerIndex] = Checked ? "1" : "0";
+                split[IntegerIndex] = Text;
                 value.Value = string.Join(',', split);
             }
-
             TagWatcher.Enabled = true;
         }
 
-        protected override void OnTextChanged(EventArgs e)
+        void UpdateText(Tag? tag)
         {
-            base.OnTextChanged(e);
-
-            if (ChangingState || Controller is null)
-                return;
-
-            TagWatcher.Enabled = false;
-            Tag? tag = Controller?.GetTag()?.QueryTag(TagQuery);
+            ChangingText = true;
             if (tag is ValueTag value)
-                value.Value = Text;
-            TagWatcher.Enabled = true;
+            {
+                string[] split = value.Value.Split(',');
+                if (split.Length <= IntegerIndex)
+                    Text = "";
+
+                else
+                    Text = split[IntegerIndex];
+            }
+            else
+            {
+                Text = "";
+            }
+            ChangingText = false;
         }
     }
 }
