@@ -59,7 +59,7 @@ namespace RainState.Tags
             return Value;
         }
 
-        public override T GetTag<T>(string tagId, string name)
+        public override T GetTag<T>(string tagId, string name, bool create)
         {
             throw new InvalidOperationException();
         }

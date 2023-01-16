@@ -30,13 +30,19 @@
         {
             this.StateTree = new System.Windows.Forms.TreeView();
             this.SplitH = new System.Windows.Forms.SplitContainer();
+            this.MainTagController = new RainState.TagWatchController();
+            this.tagWatchController1 = new RainState.TagWatchController();
+            this.tagTextBox1 = new RainState.TagTextBox();
             this.Menu = new System.Windows.Forms.MenuStrip();
             this.Menu_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_SaveAs = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.SplitH)).BeginInit();
             this.SplitH.Panel1.SuspendLayout();
+            this.SplitH.Panel2.SuspendLayout();
             this.SplitH.SuspendLayout();
+            this.MainTagController.SuspendLayout();
+            this.tagWatchController1.SuspendLayout();
             this.Menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,7 +53,7 @@
             this.StateTree.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.StateTree.Location = new System.Drawing.Point(0, 0);
             this.StateTree.Name = "StateTree";
-            this.StateTree.Size = new System.Drawing.Size(800, 426);
+            this.StateTree.Size = new System.Drawing.Size(266, 426);
             this.StateTree.TabIndex = 0;
             // 
             // SplitH
@@ -59,10 +65,46 @@
             // SplitH.Panel1
             // 
             this.SplitH.Panel1.Controls.Add(this.StateTree);
-            this.SplitH.Panel2Collapsed = true;
+            // 
+            // SplitH.Panel2
+            // 
+            this.SplitH.Panel2.Controls.Add(this.MainTagController);
             this.SplitH.Size = new System.Drawing.Size(800, 426);
             this.SplitH.SplitterDistance = 266;
             this.SplitH.TabIndex = 1;
+            // 
+            // MainTagController
+            // 
+            this.MainTagController.Controller = null;
+            this.MainTagController.Controls.Add(this.tagWatchController1);
+            this.MainTagController.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MainTagController.Location = new System.Drawing.Point(0, 0);
+            this.MainTagController.MainController = false;
+            this.MainTagController.Name = "MainTagController";
+            this.MainTagController.Size = new System.Drawing.Size(530, 426);
+            this.MainTagController.TabIndex = 0;
+            this.MainTagController.WatchQuery = "";
+            // 
+            // tagWatchController1
+            // 
+            this.tagWatchController1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.tagWatchController1.Controller = null;
+            this.tagWatchController1.Controls.Add(this.tagTextBox1);
+            this.tagWatchController1.Location = new System.Drawing.Point(67, 116);
+            this.tagWatchController1.MainController = false;
+            this.tagWatchController1.Name = "tagWatchController1";
+            this.tagWatchController1.Size = new System.Drawing.Size(200, 100);
+            this.tagWatchController1.TabIndex = 1;
+            this.tagWatchController1.WatchQuery = "progDiv@MISCPROG/mpd$";
+            // 
+            // tagTextBox1
+            // 
+            this.tagTextBox1.Controller = null;
+            this.tagTextBox1.Location = new System.Drawing.Point(72, 38);
+            this.tagTextBox1.Name = "tagTextBox1";
+            this.tagTextBox1.Size = new System.Drawing.Size(100, 23);
+            this.tagTextBox1.TabIndex = 0;
+            this.tagTextBox1.TagQuery = "mpd@TEST/#";
             // 
             // Menu
             // 
@@ -114,8 +156,12 @@
             this.Name = "MainForm";
             this.Text = "RainState";
             this.SplitH.Panel1.ResumeLayout(false);
+            this.SplitH.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SplitH)).EndInit();
             this.SplitH.ResumeLayout(false);
+            this.MainTagController.ResumeLayout(false);
+            this.tagWatchController1.ResumeLayout(false);
+            this.tagWatchController1.PerformLayout();
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
             this.ResumeLayout(false);
@@ -131,5 +177,8 @@
         private System.Windows.Forms.ToolStripMenuItem Menu_Open;
         private System.Windows.Forms.ToolStripMenuItem Menu_Save;
         private System.Windows.Forms.ToolStripMenuItem Menu_SaveAs;
+        private TagWatchController MainTagController;
+        private TagTextBox tagTextBox1;
+        private TagWatchController tagWatchController1;
     }
 }

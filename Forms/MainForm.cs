@@ -21,22 +21,20 @@ namespace RainState.Forms
         public string? CurrentFilePath { get; private set; }
 
         public RecursiveTagWatchArrays WatchArrays = new(0);
-        public TagWatch TestWatch = new("progDiv@MISCPROG/mpd$/mpd@MENUREGION")
-        {
-            WatchChildren = false
-        };
 
         public MainForm()
         {
             Instance = this;
             InitializeComponent();
 
+            MainTagController.MainController = true;
+            MainTagController.BindArray(WatchArrays);
+            TagWatchController.InitializeControllers(MainTagController);
+            ITagControl.RefreshControls(null, MainTagController);
+
             Menu.ForeColor = SystemColors.ControlLightLight;
             Menu.RenderMode = ToolStripRenderMode.Professional;
             Menu.Renderer = new ToolStripProfessionalRenderer(new DarkColorTable());
-
-            WatchArrays.Register(TestWatch);
-            TestWatch.OnTagChanged = (t) => Debugger.Break();
         }
 
         private void Menu_Open_Click(object sender, EventArgs e)
@@ -63,6 +61,8 @@ namespace RainState.Forms
 
             Menu_Save.Enabled = true;
             Menu_SaveAs.Enabled = true;
+
+            ITagControl.RefreshControls(CurrentFile.MainTag, MainTagController);
         }
         private void Menu_Save_Click(object sender, EventArgs e)
         {

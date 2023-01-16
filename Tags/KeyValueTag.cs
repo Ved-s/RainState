@@ -13,7 +13,7 @@ namespace RainState.Tags
     {
         private string key;
 
-        public Tag? Value;
+        private Tag? value;
         public bool Alternative;
 
         public override string DisplayName 
@@ -67,6 +67,12 @@ namespace RainState.Tags
                 else if (Value is KeyValueTag tag)
                     tag.StringValue = value;
             }
+        }
+
+        public Tag? Value 
+        {
+            get => value;
+            set { this.value = value; UpdateNodeName(); NameChanged(); }
         }
 
         public KeyValueTag() : base("")
@@ -130,10 +136,16 @@ namespace RainState.Tags
             return $"{Key}: {Value}";
         }
 
-        public override T GetTag<T>(string tagId, string name)
+        public override T GetTag<T>(string tagId, string name, bool create)
         {
             if (Value is not T t)
-                t = Convert<T>(this, Value, Value?.TagId ?? TagId, Value?.Name ?? Name);
+            {
+                if (!create)
+                    return null!;
+
+                t = Convert<T>(this, Value, Value?.TagId ?? TagId, Value?.Name ?? name);
+                Value = t;
+            }
 
             return t;
         }

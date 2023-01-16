@@ -60,7 +60,7 @@ namespace RainState.Tags
                         return;
             
                     int index = e.OldStartingIndex;
-                    for (int i = index; i >= 0; i--)
+                    for (int i = index - 1; i >= 0; i--)
                         if (Tags[i] is null)
                             index--;
             
@@ -114,7 +114,7 @@ namespace RainState.Tags
             return node;
         }
 
-        public override T GetTag<T>(string tagId, string name)
+        public override T GetTag<T>(string tagId, string name, bool create)
         {
             for (int i = 0; i < Tags.Count; i++)
             {
@@ -127,11 +127,15 @@ namespace RainState.Tags
 
                 if (tag is T t)
                     return t;
+                else if (!create)
+                    continue;
 
                 tag = Convert<T>(this, tag, tagId, name);
                 Tags[i] = tag;
                 return (T)tag;
             }
+            if (!create)
+                return null!;
 
             T newTag = Convert<T>(this, null, tagId, name);
             Tags.Add(newTag);

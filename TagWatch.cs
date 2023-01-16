@@ -1,10 +1,6 @@
 ﻿using RainState.Tags;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RainState
 {
@@ -15,6 +11,7 @@ namespace RainState
         public bool WatchChildren = true;
 
         public ParsedTagQuery WatchQuery { get; set; }
+        public RecursiveTagWatchArrays? ParentArray { get; set; }
 
         public TagWatch(string watchQuery)
         {
@@ -25,8 +22,29 @@ namespace RainState
         {
             if (!Enabled || !tag.MatchQuery(WatchQuery.Elements, WatchChildren))
                 return;
-            
+
             OnTagChanged?.Invoke(tag);
+        }
+    }
+
+    public interface ITagControl
+    {
+        public TagWatch TagWatcher { get; }
+        public TagWatchController? Controller { get; set; }
+
+        public void RefreshTag(Tag? parent);
+
+        public static void RefreshControls(Tag? parent, Control container, bool skipThis = false)
+        {
+            if (!skipThis && container is TagWatchController controller)
+                RefreshControls(parent?.QueryTag(controller.WatchQuery, false), controller, true);
+
+            else if (!skipThis && container is ITagControl tagcontrol)
+                tagcontrol.RefreshTag(parent);
+
+            else
+                foreach (Control child in container.Controls)
+                    RefreshControls(parent, child);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace RainState.Tags
 
         public abstract void Serialize(StreamWriter writer);
         protected abstract TreeNode CreateTreeNodeInternal();
-        public abstract T GetTag<T>(string tagId, string name) where T : Tag;
+        public abstract T? GetTag<T>(string tagId, string name, bool create) where T : Tag;
 
         public virtual bool TryConvert<T>(out T newTag) where T : Tag
         {
@@ -56,17 +56,20 @@ namespace RainState.Tags
         }
 
         // progDiv@MISCPROG/mpd$/mpd@MENUREGION/#
-        public Tag QueryTag(string query)
+        public Tag? QueryTag(string query, bool create = true)
         {
-            Tag tag = this;
+            Tag? tag = this;
 
             foreach (TagQueryElement tagelement in new TagQueryPathEnumerator(query))
             {
+                if (tag is null)
+                    return null;
+
                 tag = tagelement.Type switch
                 {
-                    TagType.Pair =>  tag.GetTag<KeyValueTag>(tagelement.Id, tagelement.Name),
-                    TagType.List =>  tag.GetTag<ListTag>    (tagelement.Id, tagelement.Name),
-                    TagType.Value => tag.GetTag<ValueTag>   (tagelement.Id, tagelement.Name),
+                    TagType.Pair =>  tag.GetTag<KeyValueTag>(tagelement.Id, tagelement.Name, create),
+                    TagType.List =>  tag.GetTag<ListTag>    (tagelement.Id, tagelement.Name, create),
+                    TagType.Value => tag.GetTag<ValueTag>   (tagelement.Id, tagelement.Name, create),
                     _ => throw new InvalidDataException($"Invalid tag type from query enumerator: {tagelement.Type}")
                 };
             }
