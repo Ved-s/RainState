@@ -10,13 +10,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Icons\Icons.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Icons.resx</DependentUpon>
+    </Compile>
     <Compile Update="TagControls\IntegersArrayTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controls\" />
+    <EmbeddedResource Update="Icons\Icons.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

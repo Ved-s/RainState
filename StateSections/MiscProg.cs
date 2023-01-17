@@ -1,4 +1,5 @@
-﻿using RainState.TagControls;
+﻿using RainState.Controls;
+using RainState.TagControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-#nullable disable
+
 
 namespace RainState.StateSections
 {
     public class MiscProg : UserControl
     {
-        private GroupBox Group;
+#nullable disable
         private TagWatchController MainTagController;
         private IntegersArrayCheckBox LookedForOlderVersionSaveFile;
         private IntegersArrayCheckBox RedVisitedPebbles;
@@ -34,39 +35,12 @@ namespace RainState.StateSections
         private Label WatchedSleepScreensLabel;
         private Label SelectedSlugcatLabel;
         private Label MenuRegionLabel;
-        private Label LevelTokensLabel;
-        private TokenStringCheckBoxes LevelTokens;
-        private TokenStringCheckBoxes SandboxTokens;
-        private Label SandboxTokensLabel;
         private TagTextBox MenuRegionInput;
+#nullable restore
 
         public MiscProg()
         {
             InitializeComponent();
-
-            LevelTokens.CheckBoxNameGetter = index =>
-            {
-                if (RainWorldData.LevelUnlocks is null || index >= RainWorldData.LevelUnlocks.Length)
-                    return $"Region {index}";
-
-                string? unlockName = RainWorldData.LevelUnlocks[index];
-                if (unlockName is null)
-                    return $"Region {index}";
-
-                RainWorldData.Region? region = RainWorldData.Regions.FirstOrDefault(reg => reg.Id == unlockName);
-
-                return region?.Name ?? unlockName;
-            };
-            LevelTokens.MinCountGetter = () => RainWorldData.LevelUnlocks?.Length ?? 0;
-
-            SandboxTokens.CheckBoxNameGetter = index =>
-            {
-                if (RainWorldData.SandboxUnlocks is null || index >= RainWorldData.SandboxUnlocks.Length)
-                    return $"Item {index}";
-
-                return RainWorldData.SandboxUnlocks[index] ?? $"Item {index}";
-            };
-            SandboxTokens.MinCountGetter = () => RainWorldData.SandboxUnlocks?.Length ?? 0;
         }
 
         private void InitializeComponent()
@@ -80,11 +54,7 @@ namespace RainState.StateSections
             this.WatchedSleepScreensLabel = new System.Windows.Forms.Label();
             this.SelectedSlugcatLabel = new System.Windows.Forms.Label();
             this.MenuRegionLabel = new System.Windows.Forms.Label();
-            this.Group = new System.Windows.Forms.GroupBox();
             this.MainTagController = new RainState.TagControls.TagWatchController();
-            this.SandboxTokens = new RainState.TagControls.TokenStringCheckBoxes();
-            this.SandboxTokensLabel = new System.Windows.Forms.Label();
-            this.LevelTokens = new RainState.TagControls.TokenStringCheckBoxes();
             this.LookedForOlderVersionSaveFile = new RainState.TagControls.IntegersArrayCheckBox();
             this.RedVisitedPebbles = new RainState.TagControls.IntegersArrayCheckBox();
             this.MeatEatingTutorialsInput = new RainState.TagControls.IntegersArrayTextBox();
@@ -97,8 +67,6 @@ namespace RainState.StateSections
             this.SelectedSlugcatInput = new RainState.TagControls.IntegersArrayTextBox();
             this.RedUnlocked = new RainState.TagControls.IntegersArrayCheckBox();
             this.MenuRegionInput = new RainState.TagControls.TagTextBox();
-            this.LevelTokensLabel = new System.Windows.Forms.Label();
-            this.Group.SuspendLayout();
             this.MainTagController.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -192,27 +160,11 @@ namespace RainState.StateSections
             this.MenuRegionLabel.TabIndex = 1;
             this.MenuRegionLabel.Text = "Menu region";
             // 
-            // Group
-            // 
-            this.Group.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Group.Controls.Add(this.MainTagController);
-            this.Group.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Group.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.Group.Location = new System.Drawing.Point(0, 0);
-            this.Group.Margin = new System.Windows.Forms.Padding(0);
-            this.Group.Name = "Group";
-            this.Group.Size = new System.Drawing.Size(539, 520);
-            this.Group.TabIndex = 1;
-            this.Group.TabStop = false;
-            this.Group.Text = "Misc progression data";
-            // 
             // MainTagController
             // 
             this.MainTagController.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MainTagController.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.MainTagController.Controller = null;
-            this.MainTagController.Controls.Add(this.SandboxTokens);
-            this.MainTagController.Controls.Add(this.SandboxTokensLabel);
-            this.MainTagController.Controls.Add(this.LevelTokens);
             this.MainTagController.Controls.Add(this.LookedForOlderVersionSaveFile);
             this.MainTagController.Controls.Add(this.RedVisitedPebbles);
             this.MainTagController.Controls.Add(this.MeatEatingTutorialsInput);
@@ -234,51 +186,14 @@ namespace RainState.StateSections
             this.MainTagController.Controls.Add(this.RedUnlocked);
             this.MainTagController.Controls.Add(this.MenuRegionInput);
             this.MainTagController.Controls.Add(this.MenuRegionLabel);
-            this.MainTagController.Controls.Add(this.LevelTokensLabel);
             this.MainTagController.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainTagController.Location = new System.Drawing.Point(3, 19);
+            this.MainTagController.Location = new System.Drawing.Point(0, 0);
             this.MainTagController.MainController = false;
             this.MainTagController.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.MainTagController.Name = "MainTagController";
-            this.MainTagController.Size = new System.Drawing.Size(533, 498);
+            this.MainTagController.Size = new System.Drawing.Size(539, 251);
             this.MainTagController.TabIndex = 0;
             this.MainTagController.WatchQuery = "progDiv@MISCPROG/mpd$";
-            // 
-            // SandboxTokens
-            // 
-            this.SandboxTokens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SandboxTokens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
-            this.SandboxTokens.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SandboxTokens.Controller = null;
-            this.SandboxTokens.Location = new System.Drawing.Point(5, 392);
-            this.SandboxTokens.Name = "SandboxTokens";
-            this.SandboxTokens.Size = new System.Drawing.Size(523, 100);
-            this.SandboxTokens.TabIndex = 23;
-            this.SandboxTokens.TagQuery = "mpd@SANDBOXTOKENS/#";
-            // 
-            // SandboxTokensLabel
-            // 
-            this.SandboxTokensLabel.AutoSize = true;
-            this.SandboxTokensLabel.Location = new System.Drawing.Point(2, 375);
-            this.SandboxTokensLabel.Name = "SandboxTokensLabel";
-            this.SandboxTokensLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.SandboxTokensLabel.Size = new System.Drawing.Size(137, 15);
-            this.SandboxTokensLabel.TabIndex = 24;
-            this.SandboxTokensLabel.Text = "Unlocked sandbox items";
-            // 
-            // LevelTokens
-            // 
-            this.LevelTokens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.LevelTokens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
-            this.LevelTokens.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LevelTokens.Controller = null;
-            this.LevelTokens.Location = new System.Drawing.Point(5, 270);
-            this.LevelTokens.Name = "LevelTokens";
-            this.LevelTokens.Size = new System.Drawing.Size(523, 100);
-            this.LevelTokens.TabIndex = 21;
-            this.LevelTokens.TagQuery = "mpd@LEVELTOKENS/#";
             // 
             // LookedForOlderVersionSaveFile
             // 
@@ -453,25 +368,15 @@ namespace RainState.StateSections
             this.MenuRegionInput.TagQuery = "mpd@MENUREGION/#";
             this.MenuRegionInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // LevelTokensLabel
-            // 
-            this.LevelTokensLabel.AutoSize = true;
-            this.LevelTokensLabel.Location = new System.Drawing.Point(2, 253);
-            this.LevelTokensLabel.Name = "LevelTokensLabel";
-            this.LevelTokensLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.LevelTokensLabel.Size = new System.Drawing.Size(94, 15);
-            this.LevelTokensLabel.TabIndex = 22;
-            this.LevelTokensLabel.Text = "Unlocked arenas";
-            // 
             // MiscProg
             // 
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.Controls.Add(this.Group);
+            this.Controls.Add(this.MainTagController);
+            this.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "MiscProg";
-            this.Size = new System.Drawing.Size(539, 520);
-            this.Group.ResumeLayout(false);
+            this.Size = new System.Drawing.Size(539, 251);
             this.MainTagController.ResumeLayout(false);
             this.MainTagController.PerformLayout();
             this.ResumeLayout(false);

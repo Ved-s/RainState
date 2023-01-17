@@ -34,7 +34,10 @@ namespace RainState.Forms
             this.SplitH = new System.Windows.Forms.SplitContainer();
             this.MainTagController = new RainState.TagControls.TagWatchController();
             this.SectionsStack = new RainState.Controls.StackPanel();
-            this.miscProg1 = new RainState.StateSections.MiscProg();
+            this.MiscProgPanel = new RainState.Controls.CollapsedPanel();
+            this.MiscProg = new RainState.StateSections.MiscProg();
+            this.UnlocksPanel = new RainState.Controls.CollapsedPanel();
+            this.unlocks1 = new RainState.StateSections.Unlocks();
             this.Menu = new System.Windows.Forms.MenuStrip();
             this.Menu_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Save = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +48,8 @@ namespace RainState.Forms
             this.SplitH.SuspendLayout();
             this.MainTagController.SuspendLayout();
             this.SectionsStack.SuspendLayout();
+            this.MiscProgPanel.SuspendLayout();
+            this.UnlocksPanel.SuspendLayout();
             this.Menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,7 +60,7 @@ namespace RainState.Forms
             this.StateTree.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.StateTree.Location = new System.Drawing.Point(0, 0);
             this.StateTree.Name = "StateTree";
-            this.StateTree.Size = new System.Drawing.Size(274, 541);
+            this.StateTree.Size = new System.Drawing.Size(306, 715);
             this.StateTree.TabIndex = 0;
             // 
             // SplitH
@@ -71,8 +76,8 @@ namespace RainState.Forms
             // SplitH.Panel2
             // 
             this.SplitH.Panel2.Controls.Add(this.MainTagController);
-            this.SplitH.Size = new System.Drawing.Size(829, 541);
-            this.SplitH.SplitterDistance = 274;
+            this.SplitH.Size = new System.Drawing.Size(926, 715);
+            this.SplitH.SplitterDistance = 306;
             this.SplitH.TabIndex = 1;
             // 
             // MainTagController
@@ -83,30 +88,71 @@ namespace RainState.Forms
             this.MainTagController.Location = new System.Drawing.Point(0, 0);
             this.MainTagController.MainController = false;
             this.MainTagController.Name = "MainTagController";
-            this.MainTagController.Size = new System.Drawing.Size(551, 541);
+            this.MainTagController.Size = new System.Drawing.Size(616, 715);
             this.MainTagController.TabIndex = 0;
             this.MainTagController.WatchQuery = "";
             // 
             // SectionsStack
             // 
             this.SectionsStack.AutoScroll = true;
-            this.SectionsStack.Controls.Add(this.miscProg1);
+            this.SectionsStack.Controls.Add(this.MiscProgPanel);
+            this.SectionsStack.Controls.Add(this.UnlocksPanel);
             this.SectionsStack.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SectionsStack.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.SectionsStack.Location = new System.Drawing.Point(0, 0);
             this.SectionsStack.Name = "SectionsStack";
-            this.SectionsStack.Size = new System.Drawing.Size(551, 541);
+            this.SectionsStack.Size = new System.Drawing.Size(616, 715);
             this.SectionsStack.TabIndex = 1;
             // 
-            // miscProg1
+            // MiscProgPanel
             // 
-            this.miscProg1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.miscProg1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.miscProg1.Location = new System.Drawing.Point(0, 0);
-            this.miscProg1.Margin = new System.Windows.Forms.Padding(0);
-            this.miscProg1.Name = "miscProg1";
-            this.miscProg1.Size = new System.Drawing.Size(551, 520);
-            this.miscProg1.TabIndex = 0;
+            this.MiscProgPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.MiscProgPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MiscProgPanel.Collapsed = true;
+            this.MiscProgPanel.Controls.Add(this.MiscProg);
+            this.MiscProgPanel.Location = new System.Drawing.Point(3, 3);
+            this.MiscProgPanel.Name = "MiscProgPanel";
+            this.MiscProgPanel.NormalHeight = 277;
+            this.MiscProgPanel.Padding = new System.Windows.Forms.Padding(0, 22, 0, 0);
+            this.MiscProgPanel.Size = new System.Drawing.Size(610, 24);
+            this.MiscProgPanel.TabIndex = 0;
+            this.MiscProgPanel.Text = "Misc progression data";
+            // 
+            // MiscProg
+            // 
+            this.MiscProg.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MiscProg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.MiscProg.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MiscProg.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.MiscProg.Location = new System.Drawing.Point(0, 22);
+            this.MiscProg.Margin = new System.Windows.Forms.Padding(0);
+            this.MiscProg.Name = "MiscProg";
+            this.MiscProg.Size = new System.Drawing.Size(608, 0);
+            this.MiscProg.TabIndex = 0;
+            // 
+            // UnlocksPanel
+            // 
+            this.UnlocksPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.UnlocksPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.UnlocksPanel.Collapsed = true;
+            this.UnlocksPanel.Controls.Add(this.unlocks1);
+            this.UnlocksPanel.Location = new System.Drawing.Point(3, 33);
+            this.UnlocksPanel.Name = "UnlocksPanel";
+            this.UnlocksPanel.NormalHeight = 387;
+            this.UnlocksPanel.Padding = new System.Windows.Forms.Padding(0, 22, 0, 0);
+            this.UnlocksPanel.Size = new System.Drawing.Size(610, 24);
+            this.UnlocksPanel.TabIndex = 1;
+            this.UnlocksPanel.Text = "Unlocks";
+            // 
+            // unlocks1
+            // 
+            this.unlocks1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.unlocks1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.unlocks1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.unlocks1.Location = new System.Drawing.Point(0, 22);
+            this.unlocks1.Name = "unlocks1";
+            this.unlocks1.Size = new System.Drawing.Size(608, 363);
+            this.unlocks1.TabIndex = 2;
             // 
             // Menu
             // 
@@ -118,7 +164,7 @@ namespace RainState.Forms
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.Menu.Size = new System.Drawing.Size(829, 24);
+            this.Menu.Size = new System.Drawing.Size(926, 24);
             this.Menu.TabIndex = 2;
             this.Menu.Text = "Menu";
             // 
@@ -150,7 +196,7 @@ namespace RainState.Forms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.ClientSize = new System.Drawing.Size(829, 565);
+            this.ClientSize = new System.Drawing.Size(926, 739);
             this.Controls.Add(this.SplitH);
             this.Controls.Add(this.Menu);
             this.ForeColor = System.Drawing.SystemColors.ControlLightLight;
@@ -163,6 +209,8 @@ namespace RainState.Forms
             this.SplitH.ResumeLayout(false);
             this.MainTagController.ResumeLayout(false);
             this.SectionsStack.ResumeLayout(false);
+            this.MiscProgPanel.ResumeLayout(false);
+            this.UnlocksPanel.ResumeLayout(false);
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
             this.ResumeLayout(false);
@@ -179,7 +227,10 @@ namespace RainState.Forms
         private System.Windows.Forms.ToolStripMenuItem Menu_Save;
         private System.Windows.Forms.ToolStripMenuItem Menu_SaveAs;
         private TagWatchController MainTagController;
-        private StateSections.MiscProg miscProg1;
+        private StateSections.MiscProg MiscProg;
         private Controls.StackPanel SectionsStack;
+        private Controls.CollapsedPanel MiscProgPanel;
+        private Controls.CollapsedPanel UnlocksPanel;
+        private StateSections.Unlocks unlocks1;
     }
 }
