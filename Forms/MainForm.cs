@@ -63,6 +63,17 @@ namespace RainState.Forms
             Menu_Save.Enabled = true;
             Menu_SaveAs.Enabled = true;
 
+            if (!RainWorldData.SearchRainWorld(dialog.FileName)    
+             && MessageBox.Show(this, "Could not find RainWorld.exe.\nSelect Rain World path manually?", "Error", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                OpenFileDialog ofd = new();
+                ofd.Filter = "Executable|*.exe";
+                ofd.InitialDirectory = Path.GetDirectoryName(dialog.FileName);
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    RainWorldData.SetRainWorldPath(Path.GetDirectoryName(ofd.FileName));
+            }
+
             ITagControl.RefreshControls(CurrentFile.MainTag, MainTagController);
         }
         private void Menu_Save_Click(object sender, EventArgs e)
