@@ -41,11 +41,20 @@ namespace RainState.Forms
         private void Menu_Open_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new();
+
+            string newSaveLocation = Path.GetFullPath(Environment.ExpandEnvironmentVariables("%APPDATA%/../LocalLow/Videocult/Rain World"));
+            if (Directory.Exists(newSaveLocation))
+                dialog.InitialDirectory = newSaveLocation;
+
             if (dialog.ShowDialog() != DialogResult.OK)
                 return;
 
             string savefile = File.ReadAllText(dialog.FileName);
-            CurrentFile = StateFile.Load(savefile) ?? throw new FileLoadException();
+            CurrentFile = StateFile.Load(savefile);
+
+            if (CurrentFile is null)
+                return;
+
             CurrentFilePath = dialog.FileName;
 
             TreeNode node = CurrentFile.MainTag.CreateTreeNode();
@@ -64,7 +73,7 @@ namespace RainState.Forms
             Menu_SaveAs.Enabled = true;
 
             if (!RainWorldData.SearchRainWorld(dialog.FileName)    
-             && MessageBox.Show(this, "Could not find RainWorld.exe.\nSelect Rain World path manually?", "Error", MessageBoxButtons.YesNo) == DialogResult.Yes)
+             && MessageBox.Show(this, "Could not find RainWorld.exe.\nSelect Rain World path manually?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 OpenFileDialog ofd = new();
                 ofd.Filter = "Executable|*.exe";

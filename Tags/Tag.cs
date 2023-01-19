@@ -1,6 +1,7 @@
 ﻿using RainState.Forms;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Packaging;
@@ -245,6 +246,9 @@ namespace RainState.Tags
             if (gt < 0)
                 return false;
 
+            if (gt - 1 == lt)
+                return false;
+            
             id = str.Substring(lt + 1, gt - lt - 2);
             return true;
         }
