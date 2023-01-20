@@ -18,6 +18,9 @@
     <Compile Update="TagControls\IntegersArrayTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="TagControls\TokenListCheckBoxes.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

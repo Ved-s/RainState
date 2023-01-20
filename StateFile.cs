@@ -36,10 +36,10 @@ namespace RainState
             bool newFormat = false;
             if (data.StartsWith("<ArrayOfKeyValueOfanyTypeanyType"))
             {
-                int valueIndex = data.IndexOf("<Value");
+                int valueIndex = data.IndexOf(">save</Key><Value");
                 if (valueIndex >= 0)
                 {
-                    int dataStart = data.IndexOf('>', valueIndex);
+                    int dataStart = data.IndexOf('>', valueIndex+19);
                     if (dataStart >= 0)
                     {
                         int dataEnd = data.IndexOf("</Value>");
@@ -52,7 +52,6 @@ namespace RainState
                 }
                 if (!newFormat && MessageBox.Show("File appears to be corrupted. Continue loading?", "Warning", MessageBoxButtons.YesNo) == DialogResult.No)
                     return null;
-                    
             }
 
             bool checksum = ChecksumRegex.IsMatch(data);

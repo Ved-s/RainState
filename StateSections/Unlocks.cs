@@ -11,9 +11,9 @@ namespace RainState.StateSections
     {
 #nullable disable
         private TagControls.TagWatchController MiscprogController;
-        private TagControls.TokenStringCheckBoxes SandboxTokens;
+        private TagControls.TokenListCheckBoxes SandboxTokens;
         private Label SandboxTokensLabel;
-        private TagControls.TokenStringCheckBoxes LevelTokens;
+        private TagControls.TokenListCheckBoxes LevelTokens;
         private Label LevelTokensLabel;
 #nullable restore
 
@@ -21,37 +21,23 @@ namespace RainState.StateSections
         {
             InitializeComponent();
 
-            LevelTokens.CheckBoxNameGetter = index =>
+            LevelTokens.Tokens = RainWorldData.LevelUnlocks ?? Array.Empty<string>();
+            SandboxTokens.Tokens = RainWorldData.SandboxUnlocks ?? Array.Empty<string>();
+
+            LevelTokens.DisplayNameGetter = id =>
             {
-                if (RainWorldData.LevelUnlocks is null || index >= RainWorldData.LevelUnlocks.Length)
-                    return $"Region {index}";
-
-                string? unlockName = RainWorldData.LevelUnlocks[index];
-                if (unlockName is null)
-                    return $"Region {index}";
-
-                RainWorldData.Region? region = RainWorldData.Regions?.FirstOrDefault(reg => reg.Id == unlockName);
-
-                return region?.Name ?? unlockName;
+                if (RainWorldData.Regions is not null && RainWorldData.Regions.TryGetValue(id, out RainWorldData.Region? region))
+                    return region.Name ?? id;
+                return id;
             };
-            LevelTokens.MinCountGetter = () => RainWorldData.LevelUnlocks?.Length ?? 0;
-
-            SandboxTokens.CheckBoxNameGetter = index =>
-            {
-                if (RainWorldData.SandboxUnlocks is null || index >= RainWorldData.SandboxUnlocks.Length)
-                    return $"Item {index}";
-
-                return RainWorldData.SandboxUnlocks[index] ?? $"Item {index}";
-            };
-            SandboxTokens.MinCountGetter = () => RainWorldData.SandboxUnlocks?.Length ?? 0;
         }
 
         private void InitializeComponent()
         {
             this.MiscprogController = new RainState.TagControls.TagWatchController();
-            this.SandboxTokens = new RainState.TagControls.TokenStringCheckBoxes();
+            this.SandboxTokens = new RainState.TagControls.TokenListCheckBoxes();
             this.SandboxTokensLabel = new System.Windows.Forms.Label();
-            this.LevelTokens = new RainState.TagControls.TokenStringCheckBoxes();
+            this.LevelTokens = new RainState.TagControls.TokenListCheckBoxes();
             this.LevelTokensLabel = new System.Windows.Forms.Label();
             this.MiscprogController.SuspendLayout();
             this.SuspendLayout();

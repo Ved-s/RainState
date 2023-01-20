@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace RainState
 {
     public static class RainWorldData
     {
+        static string[] RegionDefPaths = new[] { "world/regions.txt", "mergedmods/world/regions.txt" };
         static Regex SubregionNameRegex = new(@"Subregion: (.+)", RegexOptions.Compiled);
 
         public static string? RootDir { get; private set; }
-        public static string? RegionsDir { get; private set; }
+        public static string? AssetsDir { get; private set; }
 
-        public static Region[]? Regions { get; private set; }
+        public static Dictionary<string, Region>? Regions { get; private set; }
         public static Assembly? RWAssembly { get; private set; }
 
-        public static string?[]? LevelUnlocks { get; private set; }
-        public static string?[]? SandboxUnlocks { get; private set; }
+        public static string[]? LevelUnlocks { get; private set; }
+        public static string[]? SandboxUnlocks { get; private set; }
+
+
 
         public static void SetRainWorldPath(string? path)
         {
             if (path is null)
             {
                 RootDir = null;
-                RegionsDir = null;
+                AssetsDir = null;
                 Regions = null;
                 RWAssembly = null;
                 SandboxUnlocks = null;
@@ -37,12 +36,13 @@ namespace RainState
             }
 
             RootDir = path;
-            RegionsDir = Path.Combine(path, "World/Regions");
-
-            if (!Directory.Exists(RegionsDir))
-                RegionsDir = null;
+            AssetsDir = Path.Combine(RootDir, "RainWorld_Data/StreamingAssets");
+            if (!Directory.Exists(AssetsDir))
+                AssetsDir = null;
             else
+            {
                 LoadRegions();
+            }
 
             string assembly = Path.Combine(RootDir, "RainWorld_Data/Managed/Assembly-CSharp.dll");
             if (File.Exists(assembly))
@@ -50,9 +50,9 @@ namespace RainState
                 RWAssembly = Assembly.LoadFrom(assembly);
                 LoadAssemblyData();
             }
-            
+
         }
-        
+
         public static bool SearchRainWorld(string path)
         {
             SetRainWorldPath(null);
@@ -75,29 +75,33 @@ namespace RainState
 
         static void LoadRegions()
         {
-            if (RegionsDir is null)
+            if (AssetsDir is null)
                 return;
 
-            string infopath = Path.Combine(RegionsDir, "regions.txt");
-            if (!File.Exists(infopath))
-                return;
+            Dictionary<string, Region> regions = new ();
 
-            string[] regionIds = File.ReadAllLines(infopath);
-            Region[] regions = new Region[regionIds.Length];
-
-            for (int i = 0; i < regionIds.Length; i++)
+            foreach (string regdefpath in RegionDefPaths)
             {
-                string id = regionIds[i];
-                string propertiesPath = Path.Combine(RegionsDir, id, "Properties.txt");
-                string? name = null;
-                if (File.Exists(propertiesPath))
+                string infopath = Path.Combine(AssetsDir, regdefpath);
+                if (!File.Exists(infopath))
+                    return;
+
+                string regionsDir = Path.GetDirectoryName(infopath)!;
+                string[] regionIds = File.ReadAllLines(infopath);
+
+                foreach (string id in regionIds)
                 {
-                    string properties = File.ReadAllText(propertiesPath);
-                    Match subregion = SubregionNameRegex.Match(properties);
-                    if (subregion.Success)
-                        name = subregion.Groups[1].Value;
+                    string propertiesPath = Path.Combine(regionsDir, id, "properties.txt");
+                    string? name = null;
+                    if (File.Exists(propertiesPath))
+                    {
+                        string properties = File.ReadAllText(propertiesPath);
+                        Match subregion = SubregionNameRegex.Match(properties);
+                        if (subregion.Success)
+                            name = subregion.Groups[1].Value;
+                    }
+                    regions[id] = new(id, name);
                 }
-                regions[i] = new(id, name);
             }
             Regions = regions;
         }
@@ -107,35 +111,36 @@ namespace RainState
             if (RWAssembly is null)
                 return;
 
-            string?[]? LoadEnum(Type? type)
+            string[]? LoadUnlocks(Type? type)
             {
                 if (type is null)
                     return null;
 
-                Dictionary<int, string> values = new();
-                int maxId = -1;
+                FieldInfo? valueField = type.GetField("value");
+                if (valueField is null || valueField.FieldType != typeof(string))
+                    return null;
+
+                List<string> values = new();
                 foreach (FieldInfo field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
                 {
-                    int id = (int)field.GetValue(null)!;
-                    values[id] = field.Name;
-                    maxId = Math.Max(maxId, id);
+                    if (field.FieldType != type)
+                        continue;
+
+                    object? unlocks = field.GetValue(null);
+                    values.Add((string)valueField.GetValue(unlocks)!);
                 }
 
-                string?[] valueArray = new string?[maxId + 1];
-                foreach (var (id, value) in values)
-                    valueArray[id] = value;
-
-                return valueArray;
+                return values.ToArray();
             }
 
             Type? multiplayerUnlocks = RWAssembly.GetType("MultiplayerUnlocks");
             if (multiplayerUnlocks is not null)
             {
-                SandboxUnlocks = LoadEnum(multiplayerUnlocks.GetNestedType("SandboxUnlockID"));
-                LevelUnlocks = LoadEnum(multiplayerUnlocks.GetNestedType("LevelUnlockID"));
+                SandboxUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SandboxUnlockID"));
+                LevelUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("LevelUnlockID"));
             }
         }
 
-        public record struct Region(string Id, string? Name);
+        public record Region(string Id, string? Name);
     }
 }
