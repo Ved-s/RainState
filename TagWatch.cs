@@ -38,7 +38,11 @@ namespace RainState
         public static void RefreshControls(Tag? parent, Control container, bool skipThis = false)
         {
             if (!skipThis && container is TagWatchController controller)
-                RefreshControls(parent?.QueryTag(controller.WatchQuery, false), controller, true);
+            {
+                Tag? tag = parent?.QueryTag(controller.WatchQuery, false);
+                controller.RefreshTag(tag);
+                RefreshControls(tag, controller, true);
+            }
 
             else if (!skipThis && container is ITagControl tagcontrol)
                 tagcontrol.RefreshTag(parent);

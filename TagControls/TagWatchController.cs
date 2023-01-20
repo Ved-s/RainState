@@ -30,6 +30,7 @@ namespace RainState.TagControls
         public TagWatchController? Controller { get; set; }
 
         public bool MainController { get; set; }
+        public Action<Tag?>? OnRefresh;
 
         List<TagWatch> WaitingWatchers = new();
         private string watchQuery = "";
@@ -57,7 +58,10 @@ namespace RainState.TagControls
             }
             WaitingWatchers.Add(watch);
         }
-        public void RefreshTag(Tag? parent) { }
+        public void RefreshTag(Tag? parent)
+        {
+            OnRefresh?.Invoke(parent);
+        }
 
         public Tag? GetTag()
         {

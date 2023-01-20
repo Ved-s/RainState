@@ -138,7 +138,7 @@ namespace RainState.Forms
             this.UnlocksPanel.Controls.Add(this.unlocks1);
             this.UnlocksPanel.Location = new System.Drawing.Point(3, 33);
             this.UnlocksPanel.Name = "UnlocksPanel";
-            this.UnlocksPanel.NormalHeight = 387;
+            this.UnlocksPanel.NormalHeight = 588;
             this.UnlocksPanel.Padding = new System.Windows.Forms.Padding(0, 22, 0, 0);
             this.UnlocksPanel.Size = new System.Drawing.Size(610, 24);
             this.UnlocksPanel.TabIndex = 1;
@@ -151,7 +151,7 @@ namespace RainState.Forms
             this.unlocks1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.unlocks1.Location = new System.Drawing.Point(0, 22);
             this.unlocks1.Name = "unlocks1";
-            this.unlocks1.Size = new System.Drawing.Size(608, 363);
+            this.unlocks1.Size = new System.Drawing.Size(608, 564);
             this.unlocks1.TabIndex = 2;
             // 
             // Menu

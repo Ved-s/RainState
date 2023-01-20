@@ -24,7 +24,6 @@ namespace RainState.StateSections
         private IntegersArrayTextBox WatchedDeathScreensWithFlowerInput;
         private IntegersArrayTextBox WatchedDeathScreensInput;
         private IntegersArrayTextBox WatchedSleepScreensInput;
-        private IntegersArrayTextBox SelectedSlugcatInput;
         private IntegersArrayCheckBox RedUnlocked;
         private Label MeatEatingTutorialsLabel;
         private Label KarmaLossWarningsLabel;
@@ -33,8 +32,9 @@ namespace RainState.StateSections
         private Label WatchedDeathScreensWithFlowerLabel;
         private Label WatchedDeathScreensLabel;
         private Label WatchedSleepScreensLabel;
-        private Label SelectedSlugcatLabel;
         private Label MenuRegionLabel;
+        private TagTextBox SelectedSlugcatInput;
+        private Label SelectedSlugcatLabel;
         private TagTextBox MenuRegionInput;
 #nullable restore
 
@@ -52,7 +52,6 @@ namespace RainState.StateSections
             this.WatchedDeathScreensWithFlowerLabel = new System.Windows.Forms.Label();
             this.WatchedDeathScreensLabel = new System.Windows.Forms.Label();
             this.WatchedSleepScreensLabel = new System.Windows.Forms.Label();
-            this.SelectedSlugcatLabel = new System.Windows.Forms.Label();
             this.MenuRegionLabel = new System.Windows.Forms.Label();
             this.MainTagController = new RainState.TagControls.TagWatchController();
             this.LookedForOlderVersionSaveFile = new RainState.TagControls.IntegersArrayCheckBox();
@@ -64,7 +63,8 @@ namespace RainState.StateSections
             this.WatchedDeathScreensWithFlowerInput = new RainState.TagControls.IntegersArrayTextBox();
             this.WatchedDeathScreensInput = new RainState.TagControls.IntegersArrayTextBox();
             this.WatchedSleepScreensInput = new RainState.TagControls.IntegersArrayTextBox();
-            this.SelectedSlugcatInput = new RainState.TagControls.IntegersArrayTextBox();
+            this.SelectedSlugcatInput = new RainState.TagControls.TagTextBox();
+            this.SelectedSlugcatLabel = new System.Windows.Forms.Label();
             this.RedUnlocked = new RainState.TagControls.IntegersArrayCheckBox();
             this.MenuRegionInput = new RainState.TagControls.TagTextBox();
             this.MainTagController.SuspendLayout();
@@ -139,16 +139,6 @@ namespace RainState.StateSections
             this.WatchedSleepScreensLabel.Size = new System.Drawing.Size(126, 15);
             this.WatchedSleepScreensLabel.TabIndex = 6;
             this.WatchedSleepScreensLabel.Text = "Watched sleep screens";
-            // 
-            // SelectedSlugcatLabel
-            // 
-            this.SelectedSlugcatLabel.AutoSize = true;
-            this.SelectedSlugcatLabel.Location = new System.Drawing.Point(95, 3);
-            this.SelectedSlugcatLabel.Name = "SelectedSlugcatLabel";
-            this.SelectedSlugcatLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.SelectedSlugcatLabel.Size = new System.Drawing.Size(92, 15);
-            this.SelectedSlugcatLabel.TabIndex = 4;
-            this.SelectedSlugcatLabel.Text = "Selected slugcat";
             // 
             // MenuRegionLabel
             // 
@@ -332,14 +322,23 @@ namespace RainState.StateSections
             this.SelectedSlugcatInput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SelectedSlugcatInput.Controller = null;
             this.SelectedSlugcatInput.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.SelectedSlugcatInput.IntegerIndex = 0;
             this.SelectedSlugcatInput.Location = new System.Drawing.Point(98, 21);
             this.SelectedSlugcatInput.Multiline = true;
             this.SelectedSlugcatInput.Name = "SelectedSlugcatInput";
             this.SelectedSlugcatInput.Size = new System.Drawing.Size(89, 19);
             this.SelectedSlugcatInput.TabIndex = 3;
-            this.SelectedSlugcatInput.TagQuery = "mpd@INTEGERS/#";
+            this.SelectedSlugcatInput.TagQuery = "mpd@CURRENTSLUGCAT/#";
             this.SelectedSlugcatInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // SelectedSlugcatLabel
+            // 
+            this.SelectedSlugcatLabel.AutoSize = true;
+            this.SelectedSlugcatLabel.Location = new System.Drawing.Point(95, 3);
+            this.SelectedSlugcatLabel.Name = "SelectedSlugcatLabel";
+            this.SelectedSlugcatLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.SelectedSlugcatLabel.Size = new System.Drawing.Size(92, 15);
+            this.SelectedSlugcatLabel.TabIndex = 4;
+            this.SelectedSlugcatLabel.Text = "Selected slugcat";
             // 
             // RedUnlocked
             // 

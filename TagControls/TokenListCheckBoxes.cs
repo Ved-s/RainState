@@ -91,6 +91,7 @@ namespace RainState.TagControls
             Tag? tag = parent?.QueryTag(TagQuery, false);
             CheckBoxes.Clear();
             CheckBoxesPanel.Controls.Clear();
+            EnsureCheckBoxCount(Tokens);
             UpdateValue(tag);
         }
 
@@ -105,7 +106,7 @@ namespace RainState.TagControls
             string value = (tag as ValueTag)?.Value ?? "";
 
             UpdateSet.Clear();
-            UpdateSet.UnionWith(value.Split(','));
+            UpdateSet.UnionWith(value.Split(',', StringSplitOptions.RemoveEmptyEntries));
             EnsureCheckBoxCount(UpdateSet);
 
             foreach (var (id, cb) in CheckBoxes)

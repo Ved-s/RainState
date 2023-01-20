@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace RainState
 {
     public static class RainWorldData
     {
-        static string[] RegionDefPaths = new[] { "world/regions.txt", "mergedmods/world/regions.txt" };
         static Regex SubregionNameRegex = new(@"Subregion: (.+)", RegexOptions.Compiled);
 
         public static string? RootDir { get; private set; }
@@ -20,8 +20,8 @@ namespace RainState
 
         public static string[]? LevelUnlocks { get; private set; }
         public static string[]? SandboxUnlocks { get; private set; }
-
-
+        public static string[]? SafariUnlocks { get; private set; }
+        public static string[]? SlugcatUnlocks { get; private set; }
 
         public static void SetRainWorldPath(string? path)
         {
@@ -31,8 +31,10 @@ namespace RainState
                 AssetsDir = null;
                 Regions = null;
                 RWAssembly = null;
-                SandboxUnlocks = null;
                 LevelUnlocks = null;
+                SandboxUnlocks = null;
+                SafariUnlocks = null;
+                SlugcatUnlocks = null;
                 return;
             }
 
@@ -95,29 +97,37 @@ namespace RainState
             if (AssetsDir is null)
                 return;
 
-            Dictionary<string, Region> regions = new ();
-
-            foreach (string regdefpath in RegionDefPaths)
+            List<string> worldpaths = new()
             {
-                string infopath = Path.Combine(AssetsDir, regdefpath);
-                if (!File.Exists(infopath))
-                    return;
+                Path.Combine(AssetsDir, "world")
+            };
 
-                string regionsDir = Path.GetDirectoryName(infopath)!;
-                string[] regionIds = File.ReadAllLines(infopath);
+            string mods = Path.Combine(AssetsDir, "mods");
+            if (Directory.Exists(mods))
+                foreach (string modpath in Directory.EnumerateDirectories(mods))
+                    worldpaths.Add(Path.Combine(modpath, "world"));
 
-                foreach (string id in regionIds)
+            Dictionary<string, Region> regions = new();
+
+            foreach (string worldpath in worldpaths)
+            {
+                if (!Directory.Exists(worldpath))
+                    continue;
+
+                foreach (string regionpath in Directory.EnumerateDirectories(worldpath))
                 {
-                    string propertiesPath = Path.Combine(regionsDir, id, "properties.txt");
-                    string? name = null;
+                    string propertiesPath = Path.Combine(regionpath, "properties.txt");
                     if (File.Exists(propertiesPath))
                     {
+                        string id = Path.GetFileName(regionpath)!.ToUpper();
+
+                        string? name = null;
                         string properties = File.ReadAllText(propertiesPath);
                         Match subregion = SubregionNameRegex.Match(properties);
                         if (subregion.Success)
                             name = subregion.Groups[1].Value;
+                        regions[id] = new(id, name);
                     }
-                    regions[id] = new(id, name);
                 }
             }
             Regions = regions;
@@ -153,8 +163,10 @@ namespace RainState
             Type? multiplayerUnlocks = RWAssembly.GetType("MultiplayerUnlocks");
             if (multiplayerUnlocks is not null)
             {
-                SandboxUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SandboxUnlockID"));
                 LevelUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("LevelUnlockID"));
+                SandboxUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SandboxUnlockID"));
+                SafariUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SafariUnlockID"));
+                SlugcatUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SlugcatUnlockID"));
             }
         }
 
