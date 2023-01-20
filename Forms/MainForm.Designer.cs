@@ -38,12 +38,14 @@ namespace RainState.Forms
             this.MiscProg = new RainState.StateSections.MiscProg();
             this.UnlocksPanel = new RainState.Controls.CollapsedPanel();
             this.unlocks1 = new RainState.StateSections.Unlocks();
+            this.LorePanel = new RainState.Controls.CollapsedPanel();
+            this.Lore = new RainState.StateSections.Lore();
             this.Menu = new System.Windows.Forms.MenuStrip();
             this.Menu_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_SaveAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.LorePanel = new RainState.Controls.CollapsedPanel();
-            this.Lore = new RainState.StateSections.Lore();
+            this.MoreSlugcatsPanel = new RainState.Controls.CollapsedPanel();
+            this.MoreSlugcats = new RainState.StateSections.MoreSlugcats();
             ((System.ComponentModel.ISupportInitialize)(this.SplitH)).BeginInit();
             this.SplitH.Panel1.SuspendLayout();
             this.SplitH.Panel2.SuspendLayout();
@@ -52,8 +54,9 @@ namespace RainState.Forms
             this.SectionsStack.SuspendLayout();
             this.MiscProgPanel.SuspendLayout();
             this.UnlocksPanel.SuspendLayout();
-            this.Menu.SuspendLayout();
             this.LorePanel.SuspendLayout();
+            this.Menu.SuspendLayout();
+            this.MoreSlugcatsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // StateTree
@@ -63,7 +66,7 @@ namespace RainState.Forms
             this.StateTree.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.StateTree.Location = new System.Drawing.Point(0, 0);
             this.StateTree.Name = "StateTree";
-            this.StateTree.Size = new System.Drawing.Size(229, 397);
+            this.StateTree.Size = new System.Drawing.Size(252, 397);
             this.StateTree.TabIndex = 0;
             // 
             // SplitH
@@ -79,8 +82,8 @@ namespace RainState.Forms
             // SplitH.Panel2
             // 
             this.SplitH.Panel2.Controls.Add(this.MainTagController);
-            this.SplitH.Size = new System.Drawing.Size(695, 397);
-            this.SplitH.SplitterDistance = 229;
+            this.SplitH.Size = new System.Drawing.Size(769, 397);
+            this.SplitH.SplitterDistance = 252;
             this.SplitH.TabIndex = 1;
             // 
             // MainTagController
@@ -91,7 +94,7 @@ namespace RainState.Forms
             this.MainTagController.Location = new System.Drawing.Point(0, 0);
             this.MainTagController.MainController = false;
             this.MainTagController.Name = "MainTagController";
-            this.MainTagController.Size = new System.Drawing.Size(462, 397);
+            this.MainTagController.Size = new System.Drawing.Size(513, 397);
             this.MainTagController.TabIndex = 0;
             this.MainTagController.WatchQuery = "";
             // 
@@ -101,11 +104,12 @@ namespace RainState.Forms
             this.SectionsStack.Controls.Add(this.MiscProgPanel);
             this.SectionsStack.Controls.Add(this.UnlocksPanel);
             this.SectionsStack.Controls.Add(this.LorePanel);
+            this.SectionsStack.Controls.Add(this.MoreSlugcatsPanel);
             this.SectionsStack.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SectionsStack.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.SectionsStack.Location = new System.Drawing.Point(0, 0);
             this.SectionsStack.Name = "SectionsStack";
-            this.SectionsStack.Size = new System.Drawing.Size(462, 397);
+            this.SectionsStack.Size = new System.Drawing.Size(513, 397);
             this.SectionsStack.TabIndex = 1;
             // 
             // MiscProgPanel
@@ -118,7 +122,7 @@ namespace RainState.Forms
             this.MiscProgPanel.Name = "MiscProgPanel";
             this.MiscProgPanel.NormalHeight = 277;
             this.MiscProgPanel.Padding = new System.Windows.Forms.Padding(0, 22, 0, 0);
-            this.MiscProgPanel.Size = new System.Drawing.Size(456, 24);
+            this.MiscProgPanel.Size = new System.Drawing.Size(507, 24);
             this.MiscProgPanel.TabIndex = 0;
             this.MiscProgPanel.Text = "Misc progression data";
             // 
@@ -131,7 +135,7 @@ namespace RainState.Forms
             this.MiscProg.Location = new System.Drawing.Point(0, 22);
             this.MiscProg.Margin = new System.Windows.Forms.Padding(0);
             this.MiscProg.Name = "MiscProg";
-            this.MiscProg.Size = new System.Drawing.Size(454, 0);
+            this.MiscProg.Size = new System.Drawing.Size(505, 0);
             this.MiscProg.TabIndex = 0;
             // 
             // UnlocksPanel
@@ -144,7 +148,7 @@ namespace RainState.Forms
             this.UnlocksPanel.Name = "UnlocksPanel";
             this.UnlocksPanel.NormalHeight = 588;
             this.UnlocksPanel.Padding = new System.Windows.Forms.Padding(0, 22, 0, 0);
-            this.UnlocksPanel.Size = new System.Drawing.Size(456, 24);
+            this.UnlocksPanel.Size = new System.Drawing.Size(507, 24);
             this.UnlocksPanel.TabIndex = 1;
             this.UnlocksPanel.Text = "Unlocks";
             // 
@@ -155,8 +159,32 @@ namespace RainState.Forms
             this.unlocks1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.unlocks1.Location = new System.Drawing.Point(0, 22);
             this.unlocks1.Name = "unlocks1";
-            this.unlocks1.Size = new System.Drawing.Size(454, 0);
+            this.unlocks1.Size = new System.Drawing.Size(505, 0);
             this.unlocks1.TabIndex = 2;
+            // 
+            // LorePanel
+            // 
+            this.LorePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.LorePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LorePanel.Collapsed = true;
+            this.LorePanel.Controls.Add(this.Lore);
+            this.LorePanel.Location = new System.Drawing.Point(3, 63);
+            this.LorePanel.Name = "LorePanel";
+            this.LorePanel.NormalHeight = 727;
+            this.LorePanel.Padding = new System.Windows.Forms.Padding(0, 22, 0, 0);
+            this.LorePanel.Size = new System.Drawing.Size(507, 24);
+            this.LorePanel.TabIndex = 2;
+            this.LorePanel.Text = "Lore";
+            // 
+            // Lore
+            // 
+            this.Lore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.Lore.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Lore.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Lore.Location = new System.Drawing.Point(0, 22);
+            this.Lore.Name = "Lore";
+            this.Lore.Size = new System.Drawing.Size(505, 0);
+            this.Lore.TabIndex = 2;
             // 
             // Menu
             // 
@@ -168,7 +196,7 @@ namespace RainState.Forms
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.Menu.Size = new System.Drawing.Size(695, 24);
+            this.Menu.Size = new System.Drawing.Size(769, 24);
             this.Menu.TabIndex = 2;
             this.Menu.Text = "Menu";
             // 
@@ -195,36 +223,38 @@ namespace RainState.Forms
             this.Menu_SaveAs.Text = "Save As";
             this.Menu_SaveAs.Click += new System.EventHandler(this.Menu_SaveAs_Click);
             // 
-            // LorePanel
+            // MoreSlugcatsPanel
             // 
-            this.LorePanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.LorePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LorePanel.Collapsed = true;
-            this.LorePanel.Controls.Add(this.Lore);
-            this.LorePanel.Location = new System.Drawing.Point(3, 63);
-            this.LorePanel.Name = "LorePanel";
-            this.LorePanel.NormalHeight = 727;
-            this.LorePanel.Padding = new System.Windows.Forms.Padding(0, 22, 0, 0);
-            this.LorePanel.Size = new System.Drawing.Size(456, 24);
-            this.LorePanel.TabIndex = 2;
-            this.LorePanel.Text = "Lore";
+            this.MoreSlugcatsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.MoreSlugcatsPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MoreSlugcatsPanel.Collapsed = true;
+            this.MoreSlugcatsPanel.Controls.Add(this.MoreSlugcats);
+            this.MoreSlugcatsPanel.Location = new System.Drawing.Point(3, 93);
+            this.MoreSlugcatsPanel.Name = "MoreSlugcatsPanel";
+            this.MoreSlugcatsPanel.NormalHeight = 237;
+            this.MoreSlugcatsPanel.Padding = new System.Windows.Forms.Padding(0, 22, 0, 0);
+            this.MoreSlugcatsPanel.Size = new System.Drawing.Size(507, 24);
+            this.MoreSlugcatsPanel.TabIndex = 2;
+            this.MoreSlugcatsPanel.Text = "More Slugcats";
             // 
-            // Lore
+            // MoreSlugcats
             // 
-            this.Lore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.Lore.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Lore.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.Lore.Location = new System.Drawing.Point(0, 22);
-            this.Lore.Name = "Lore";
-            this.Lore.Size = new System.Drawing.Size(608, 703);
-            this.Lore.TabIndex = 2;
+            this.MoreSlugcats.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MoreSlugcats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.MoreSlugcats.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MoreSlugcats.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.MoreSlugcats.Location = new System.Drawing.Point(0, 22);
+            this.MoreSlugcats.Margin = new System.Windows.Forms.Padding(0);
+            this.MoreSlugcats.Name = "MoreSlugcats";
+            this.MoreSlugcats.Size = new System.Drawing.Size(505, 213);
+            this.MoreSlugcats.TabIndex = 2;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.ClientSize = new System.Drawing.Size(695, 421);
+            this.ClientSize = new System.Drawing.Size(769, 421);
             this.Controls.Add(this.SplitH);
             this.Controls.Add(this.Menu);
             this.ForeColor = System.Drawing.SystemColors.ControlLightLight;
@@ -239,9 +269,10 @@ namespace RainState.Forms
             this.SectionsStack.ResumeLayout(false);
             this.MiscProgPanel.ResumeLayout(false);
             this.UnlocksPanel.ResumeLayout(false);
+            this.LorePanel.ResumeLayout(false);
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
-            this.LorePanel.ResumeLayout(false);
+            this.MoreSlugcatsPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -263,5 +294,7 @@ namespace RainState.Forms
         private StateSections.Unlocks unlocks1;
         private Controls.CollapsedPanel LorePanel;
         private StateSections.Lore Lore;
+        private Controls.CollapsedPanel MoreSlugcatsPanel;
+        private StateSections.MoreSlugcats MoreSlugcats;
     }
 }

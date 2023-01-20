@@ -30,6 +30,12 @@ namespace RainState.TagControls
         [Browsable(false)]
         public TagWatchController? Controller { get; set; }
 
+        [DefaultValue("1")]
+        public string CheckedValue { get; set; } = "1";
+
+        [DefaultValue("0")]
+        public string UncheckedValue { get; set; } = "0";
+
         bool ChangingState = false;
         public void RefreshTag(Tag? parent)
         {
@@ -54,8 +60,11 @@ namespace RainState.TagControls
                 if (split.Length <= IntegerIndex)
                     Checked = false;
 
-                else
-                    Checked = split[IntegerIndex] == "1";
+                else if (split[IntegerIndex] == CheckedValue)
+                    Checked = true;
+
+                else if (split[IntegerIndex] == UncheckedValue)
+                    Checked = false;
             }
             else
             {
@@ -79,7 +88,7 @@ namespace RainState.TagControls
                 if (IntegerIndex >= split.Length)
                     Array.Resize(ref split, IntegerIndex + 1);
 
-                split[IntegerIndex] = Checked ? "1" : "0";
+                split[IntegerIndex] = Checked ? CheckedValue : UncheckedValue;
                 value.Value = string.Join(',', split);
             }
 

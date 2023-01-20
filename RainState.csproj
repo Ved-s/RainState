@@ -18,6 +18,9 @@
     <Compile Update="StateSections\Lore.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="StateSections\MoreSlugcats.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="TagControls\IntegersArrayTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
