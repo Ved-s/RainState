@@ -23,6 +23,9 @@ namespace RainState
         public static string[]? SafariUnlocks { get; private set; }
         public static string[]? SlugcatUnlocks { get; private set; }
 
+        public static string[]? LorePearls { get; private set; }
+        public static string[]? Broadcasts { get; private set; }
+
         public static void SetRainWorldPath(string? path)
         {
             if (path is null)
@@ -168,6 +171,9 @@ namespace RainState
                 SafariUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SafariUnlockID"));
                 SlugcatUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SlugcatUnlockID"));
             }
+
+            LorePearls = LoadUnlocks(RWAssembly.GetType("DataPearl+AbstractDataPearl+DataPearlType"));
+            Broadcasts = LoadUnlocks(RWAssembly.GetType("MoreSlugcats.ChatlogData+ChatlogID"));
         }
 
         public record Region(string Id, string? Name);

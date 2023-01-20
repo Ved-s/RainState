@@ -15,6 +15,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Icons.resx</DependentUpon>
     </Compile>
+    <Compile Update="StateSections\Lore.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="TagControls\IntegersArrayTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
