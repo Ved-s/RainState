@@ -1,0 +1,3 @@
+Make query execution form
+query filters, mpd@SHELTERLIST[mpd@SU]/mpd@SU/mpd$
+buttons for rebuilding/rebinding tree and editor ui

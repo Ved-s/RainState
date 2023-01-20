@@ -19,6 +19,11 @@ namespace RainState.Tags
             ["WINSTATE"] = "ws",
         };
 
+        static HashSet<string> TagLoadAsStringTag = new()
+        {
+            "VISITED"
+        };
+
         public virtual string DisplayName { get => Name; }
         public abstract string Name { get; set; }
         public string TagId;
@@ -205,7 +210,11 @@ namespace RainState.Tags
                         valueTagId = tagSpecific;
 
                     pos = tagStringPos + tagString.Length;
-                    Tag? value = ReadTag(str, ref pos, end, valueTagId);
+                    Tag? value;
+                    if (TagLoadAsStringTag.Contains(name))
+                        value = new ValueTag(str.Substring(pos, end - pos));
+                    else
+                        value = ReadTag(str, ref pos, end, valueTagId);
 
                     if (value is KeyValueTag { Alternative: true })
                         value = new ListTag(value.TagId, true, new[] { value });

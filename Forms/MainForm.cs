@@ -83,7 +83,7 @@ namespace RainState.Forms
                     RainWorldData.SetRainWorldPath(Path.GetDirectoryName(ofd.FileName));
             }
 
-            ITagControl.RefreshControls(CurrentFile.MainTag, MainTagController);
+            //ITagControl.RefreshControls(CurrentFile.MainTag, MainTagController);
         }
         private void Menu_Save_Click(object sender, EventArgs e)
         {

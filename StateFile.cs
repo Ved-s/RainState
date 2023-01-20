@@ -115,7 +115,7 @@ namespace RainState
             byte[] gtRepl = Encoding.ASCII.GetBytes("&gt;");
             byte[] ltRepl = Encoding.ASCII.GetBytes("&lt;");
 
-            byte[] buffer = ArrayPool<byte>.Shared.Rent(1024);
+            byte[] buffer = new byte[1024];
 
             while (true)
             {
@@ -125,7 +125,7 @@ namespace RainState
                     break;
 
                 int prevCharIdx = 0;
-                for (int i = 0; i <= read; i++)
+                for (int i = 0; i < read; i++)
                 {
                     byte b = buffer[i];
                     if ((b == lt || b == gt) && i > prevCharIdx)
