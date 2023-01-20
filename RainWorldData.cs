@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -61,7 +62,7 @@ namespace RainState
             while (true)
             {
                 if (rwpath is null)
-                    return false;
+                    break;
 
                 if (File.Exists(Path.Combine(rwpath, "RainWorld.exe")))
                     break;
@@ -69,8 +70,24 @@ namespace RainState
                 rwpath = Path.GetDirectoryName(rwpath);
             }
 
-            SetRainWorldPath(rwpath);
-            return true;
+            if (rwpath is null)
+            {
+                object? steampathobj =
+                    Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Valve\\Steam", "InstallPath", null) ??
+                    Registry.GetValue("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Valve\\Steam", "InstallPath", null);
+
+                if (steampathobj is string steampath)
+                {
+                    rwpath = Path.Combine(steampath, "steamapps/common/Rain World");
+                    if (!Directory.Exists(rwpath))
+                        rwpath = null;
+                }
+            }
+
+            if (rwpath is not null)
+                SetRainWorldPath(rwpath);
+
+            return rwpath is not null;
         }
 
         static void LoadRegions()
