@@ -24,6 +24,13 @@ namespace RainState.Forms
 
         public RecursiveTagWatchArrays? WatchArrays;
 
+        Dictionary<string, string> NewSaveFileTagDisplayNames = new()
+        {
+            ["save"] = "Save file",
+            ["save__Backup"] = "Save file backup",
+            ["options"] = "Game options"
+        };
+
         public MainForm()
         {
             Instance = this;
@@ -54,7 +61,17 @@ namespace RainState.Forms
                 Text = "RainState: Reading file...";
 
                 string savefile = File.ReadAllText(dialog.FileName);
-                CurrentFile = StateFile.Load(savefile);
+                CurrentFile = StateFile.Load(savefile, names => 
+                {
+                    if (names.Count() <= 1)
+                        return names.First();
+                    return StringSelector.ShowDialog("Select save file to load", names, name => 
+                    {
+                        if (NewSaveFileTagDisplayNames.TryGetValue(name, out string? displayName))
+                            return displayName;
+                        return name;
+                    });
+                });
 
                 if (CurrentFile is null)
                     return;
@@ -97,7 +114,17 @@ namespace RainState.Forms
             }
             finally
             {
-                Text = "RainState";
+                if (CurrentFile?.NewFormatTag is not null)
+                {
+                    string displayname =
+                        NewSaveFileTagDisplayNames.TryGetValue(CurrentFile.NewFormatTag.Key, out string? val) ? val
+                        : CurrentFile.NewFormatTag.Key;
+                    Text = $"RainState: Editing {displayname}";
+                }
+                else
+                {
+                    Text = "RainState";
+                }
             }
         }
         private void Menu_Save_Click(object sender, EventArgs e)

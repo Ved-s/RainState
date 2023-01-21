@@ -1,12 +1,17 @@
 ﻿using RainState.Tags;
 using System;
 using System.Buffers;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace RainState
 {
@@ -21,37 +26,49 @@ namespace RainState
         public StateFile? CurrentFile;
 
         public bool HasChecksum;
-        public bool NewFormat;
+        public NewFormatNamedTag? NewFormatTag;
         public Tag MainTag;
 
-        public StateFile(Tag mainTag, bool hasChecksum, bool newFormat)
+        public StateFile(Tag mainTag, bool hasChecksum, NewFormatNamedTag? newFormatTag)
         {
             MainTag = mainTag;
             HasChecksum = hasChecksum;
-            NewFormat = newFormat;
+            NewFormatTag = newFormatTag;
         }
 
-        public static StateFile? Load(string data)
+        public static StateFile? Load(string data, Func<IEnumerable<string>, string?>? newFormatNameSelector = null)
         {
-            bool newFormat = false;
+            int zeroIndex = data.IndexOf('\0');
+            if (zeroIndex >= 0)
+                data = data.Substring(0, zeroIndex);
+
+            NewFormatNamedTag? newFormatTag = null;
             if (data.StartsWith("<ArrayOfKeyValueOfanyTypeanyType"))
             {
-                int valueIndex = data.IndexOf(">save</Key><Value");
-                if (valueIndex >= 0)
+                XDocument xml = XDocument.Parse(data);
+
+                if (xml.Root is not null)
                 {
-                    int dataStart = data.IndexOf('>', valueIndex+19);
-                    if (dataStart >= 0)
+                    XName keyName = XName.Get("Key", xml.Root.Name.Namespace.NamespaceName);
+                    XName valueName = XName.Get("Value", xml.Root.Name.Namespace.NamespaceName);
+
+                    Dictionary<string, XElement> saves = new();
+
+                    foreach (XElement element in xml.Root.Elements())
                     {
-                        int dataEnd = data.IndexOf("</Value>", dataStart);
-                        if (dataEnd >= 0)
-                        {
-                            newFormat = true;
-                            data = WebUtility.HtmlDecode(data.Substring(dataStart + 1, dataEnd - dataStart - 1));
-                        }
+                        XElement? key = element.Element(keyName);
+                        XElement? value = element.Element(valueName);
+
+                        if (key is not null && value is not null)
+                            saves[key.Value] = value;
                     }
+                    string? name = newFormatNameSelector is null ? saves.Keys.FirstOrDefault() : newFormatNameSelector.Invoke(saves.Keys);
+                    if (name is null || !saves.TryGetValue(name, out XElement? saveElement))
+                        return null;
+
+                    newFormatTag = new(name, saveElement);
+                    data = saveElement.Value;
                 }
-                if (!newFormat && MessageBox.Show("File appears to be corrupted. Continue loading?", "Warning", MessageBoxButtons.YesNo) == DialogResult.No)
-                    return null;
             }
 
             bool checksum = ChecksumRegex.IsMatch(data);
@@ -60,45 +77,73 @@ namespace RainState
             if (tag is null)
                 return null;
 
-            return new(tag, checksum, newFormat);
+            return new(tag, checksum, newFormatTag);
         }
 
         public void Save(Stream stream)
         {
-            if (NewFormat)
-                stream.Write(NewSavePrefix);
+            StringBuilder builder = SaveInternal();
+            UTF8Encoding encoding = new();
 
-            MemoryStream ms = new();
-            StreamWriter writer = new(ms, encoding: new UTF8Encoding(), leaveOpen: true)
+            if (NewFormatTag is null)
             {
-                AutoFlush = true
-            };
+                int maxchunksize = 0;
+                foreach (ReadOnlyMemory<char> chars in builder.GetChunks())
+                    maxchunksize = Math.Max(maxchunksize, chars.Length);
 
-            MainTag.Serialize(writer);
-            ms.Position = 0;
+                Span<byte> bytes = stackalloc byte[maxchunksize * 2];
 
-            if (HasChecksum)
-            {
-                string checksum = CalculateChecksum(ms.GetBuffer(), 0, (int)ms.Length);
-                using (writer = new(stream, encoding: new UTF8Encoding(), leaveOpen: true) { AutoFlush = true })
+                foreach (ReadOnlyMemory<char> chars in builder.GetChunks())
                 {
-                    writer.Write(checksum);
+                    int count = encoding.GetBytes(chars.Span, bytes);
+                    stream.Write(bytes.Slice(0, count));
                 }
+
+                return;
             }
-            ms.Position = 0;
-            if (NewFormat)
-            {
-                CopyAndHtmlEncode(ms, stream);
-                stream.Write(NewSavePostfix);
-            }
-            else ms.CopyTo(stream);
+
+            NewFormatTag.Value.Value = builder.ToString();
+
+            // https://stackoverflow.com/a/16681276/13645088
+            XmlWriterSettings xws = new XmlWriterSettings { OmitXmlDeclaration = true };
+            XmlWriter writer = XmlWriter.Create(stream, xws);
+            NewFormatTag.Value.Document!.Save(writer);
+            writer.Flush();
         }
 
-        static string CalculateChecksum(byte[] data, int offset, int count)
+        StringBuilder SaveInternal()
+        {
+            StringBuilder builder = new();
+
+            MainTag.Serialize(builder);
+            if (HasChecksum)
+            {
+                string checksum = CalculateChecksum(builder);
+                builder.Insert(0, checksum);
+            }
+
+            return builder;
+        }
+
+        static string CalculateChecksum(StringBuilder builder)
         {
             IncrementalHash md5 = IncrementalHash.CreateHash(HashAlgorithmName.MD5);
+            UTF8Encoding encoding = new();
 
-            md5.AppendData(data, offset, count);
+            int maxchunksize = 0;
+            foreach (ReadOnlyMemory<char> chars in builder.GetChunks())
+            {
+                maxchunksize = Math.Max(maxchunksize, chars.Length);
+            }
+
+            Span<byte> bytes = stackalloc byte[maxchunksize * 2];
+
+            foreach (ReadOnlyMemory<char> chars in builder.GetChunks())
+            {
+                int count = encoding.GetBytes(chars.Span, bytes);
+                md5.AppendData(bytes.Slice(0, count));
+            }
+
             md5.AppendData(ChecksumSalt);
 
             byte[] hash = md5.GetHashAndReset();
@@ -149,5 +194,7 @@ namespace RainState
                     dest.Write(buffer, prevCharIdx, read - prevCharIdx);
             }
         }
+
+        public record NewFormatNamedTag(string Key, XElement Value);
     }
 }

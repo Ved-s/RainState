@@ -83,17 +83,17 @@ namespace RainState.Tags
             }
         }
 
-        public override void Serialize(StreamWriter writer)
+        public override void Serialize(StringBuilder builder)
         {
             for (int i = 0; i < Tags.Count; i++)
             {
                 Tag? tag = Tags[i];
-                tag?.Serialize(writer);
+                tag?.Serialize(builder);
 
-                writer.Write('<');
-                writer.Write(TagId);
-                writer.Write(Alternative ? 'C' : 'A');
-                writer.Write('>');
+                builder.Append('<');
+                builder.Append(TagId);
+                builder.Append(Alternative ? 'C' : 'A');
+                builder.Append('>');
             }
         }
 

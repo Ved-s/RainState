@@ -89,14 +89,14 @@ namespace RainState.Tags
                 Value.Parent = this;
         }
 
-        public override void Serialize(StreamWriter writer)
+        public override void Serialize(StringBuilder builder)
         {
-            writer.Write(Key);
-            writer.Write('<');
-            writer.Write(TagId);
-            writer.Write(Alternative ? 'D' : 'B');
-            writer.Write('>');
-            Value?.Serialize(writer);
+            builder.Append(Key);
+            builder.Append('<');
+            builder.Append(TagId);
+            builder.Append(Alternative ? 'D' : 'B');
+            builder.Append('>');
+            Value?.Serialize(builder);
         }
 
         protected override TreeNode CreateTreeNodeInternal()

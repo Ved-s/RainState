@@ -41,7 +41,7 @@ namespace RainState.Tags
             return TreeNode = CreateTreeNodeInternal();
         }
 
-        public abstract void Serialize(StreamWriter writer);
+        public abstract void Serialize(StringBuilder builder);
         protected abstract TreeNode CreateTreeNodeInternal();
         public abstract T? GetTag<T>(string tagId, string name, bool create) where T : Tag;
 

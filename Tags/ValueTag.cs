@@ -1,6 +1,7 @@
 ﻿using RainState.Forms;
 using System;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace RainState.Tags
@@ -36,9 +37,9 @@ namespace RainState.Tags
             this.value = value;
         }
 
-        public override void Serialize(StreamWriter writer)
+        public override void Serialize(StringBuilder builder)
         {
-            writer.Write(Value);
+            builder.Append(Value);
         }
 
         protected override TreeNode CreateTreeNodeInternal()
