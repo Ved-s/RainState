@@ -42,7 +42,7 @@ namespace RainState
                     int dataStart = data.IndexOf('>', valueIndex+19);
                     if (dataStart >= 0)
                     {
-                        int dataEnd = data.IndexOf("</Value>");
+                        int dataEnd = data.IndexOf("</Value>", dataStart);
                         if (dataEnd >= 0)
                         {
                             newFormat = true;
