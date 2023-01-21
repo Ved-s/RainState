@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -27,6 +28,9 @@ namespace RainState
         public static string[]? LorePearls { get; private set; }
         public static string[]? Broadcasts { get; private set; }
 
+        public static string[]? AllSlugcats { get; private set; }
+        public static string[]? PlayableSlugcats { get; private set; }
+
         public static void SetRainWorldPath(string? path)
         {
             if (path is null)
@@ -35,10 +39,14 @@ namespace RainState
                 AssetsDir = null;
                 Regions = null;
                 RWAssembly = null;
+
                 LevelUnlocks = null;
                 SandboxUnlocks = null;
                 SafariUnlocks = null;
                 SlugcatUnlocks = null;
+
+                AllSlugcats = null;
+                PlayableSlugcats = null;
                 return;
             }
 
@@ -151,23 +159,23 @@ namespace RainState
             if (RWAssembly is null)
                 return;
 
-            string[]? LoadUnlocks(Type? type)
+            string[]? LoadExtEnum(Type? type)
             {
                 if (type is null)
-                    return null;
-
-                FieldInfo? valueField = type.GetField("value");
-                if (valueField is null || valueField.FieldType != typeof(string))
                     return null;
 
                 List<string> values = new();
                 foreach (FieldInfo field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
                 {
-                    if (field.FieldType != type)
+                    FieldInfo? valueField = field.FieldType.GetField("value");
+                    if (valueField is null || valueField.FieldType != typeof(string))
                         continue;
 
-                    object? unlocks = field.GetValue(null);
-                    values.Add((string)valueField.GetValue(unlocks)!);
+                    object? value = field.GetValue(null);
+                    if (value is null)
+                        continue;
+
+                    values.Add((string)valueField.GetValue(value)!);
                 }
 
                 return values.ToArray();
@@ -176,14 +184,30 @@ namespace RainState
             Type? multiplayerUnlocks = RWAssembly.GetType("MultiplayerUnlocks");
             if (multiplayerUnlocks is not null)
             {
-                LevelUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("LevelUnlockID"));
-                SandboxUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SandboxUnlockID"));
-                SafariUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SafariUnlockID"));
-                SlugcatUnlocks = LoadUnlocks(multiplayerUnlocks.GetNestedType("SlugcatUnlockID"));
+                LevelUnlocks = LoadExtEnum(multiplayerUnlocks.GetNestedType("LevelUnlockID"));
+                SandboxUnlocks = LoadExtEnum(multiplayerUnlocks.GetNestedType("SandboxUnlockID"));
+                SafariUnlocks = LoadExtEnum(multiplayerUnlocks.GetNestedType("SafariUnlockID"));
+                SlugcatUnlocks = LoadExtEnum(multiplayerUnlocks.GetNestedType("SlugcatUnlockID"));
             }
 
-            LorePearls = LoadUnlocks(RWAssembly.GetType("DataPearl+AbstractDataPearl+DataPearlType"));
-            Broadcasts = LoadUnlocks(RWAssembly.GetType("MoreSlugcats.ChatlogData+ChatlogID"));
+            LorePearls = LoadExtEnum(RWAssembly.GetType("DataPearl+AbstractDataPearl+DataPearlType"));
+            Broadcasts = LoadExtEnum(RWAssembly.GetType("MoreSlugcats.ChatlogData+ChatlogID"));
+
+
+            var slugcatsrw = LoadExtEnum(RWAssembly.GetType("SlugcatStats+Name"));
+            RWAssembly.GetType("MoreSlugcats.MoreSlugcatsEnums+SlugcatStatsName")?.GetMethod("RegisterValues")?.Invoke(null, null);
+            var slugcatsmsc = LoadExtEnum(RWAssembly.GetType("MoreSlugcats.MoreSlugcatsEnums+SlugcatStatsName"));
+
+            List<string> slugcats = new();
+            if (slugcatsrw is not null) slugcats.AddRange(slugcatsrw);
+            if (slugcatsmsc is not null) slugcats.AddRange(slugcatsmsc);
+
+            AllSlugcats = slugcats.ToArray();
+
+            slugcats.Remove("Night");
+            slugcats.Remove("Inv");
+            slugcats.Remove("Slugpup");
+            PlayableSlugcats = slugcats.ToArray();
         }
 
         public record Region(string Id, string? Name);
