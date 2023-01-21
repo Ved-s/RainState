@@ -171,7 +171,6 @@ namespace RainState.Forms
             Text = "RainState: Refreshing UI...";
             ITagControl.RefreshControls(CurrentFile?.MainTag, MainTagController);
         }
-
         void BuildUI()
         {
             if (CurrentFile is null)

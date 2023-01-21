@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace RainState
 {
@@ -119,11 +120,20 @@ namespace RainState
 
                 foreach (string regionpath in Directory.EnumerateDirectories(worldpath))
                 {
+                    string id = Path.GetFileName(regionpath)!.ToUpper();
+                    if (regions.ContainsKey(id))
+                        continue;
+
+                    string displaynamePath = Path.Combine(regionpath, "displayname.txt");
+                    if (File.Exists(displaynamePath))
+                    {
+                        regions[id] = new(id, File.ReadAllText(displaynamePath));
+                        continue;
+                    }
+
                     string propertiesPath = Path.Combine(regionpath, "properties.txt");
                     if (File.Exists(propertiesPath))
                     {
-                        string id = Path.GetFileName(regionpath)!.ToUpper();
-
                         string? name = null;
                         string properties = File.ReadAllText(propertiesPath);
                         Match subregion = SubregionNameRegex.Match(properties);
