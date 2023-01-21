@@ -12,13 +12,15 @@ namespace RainState.Controls
 {
     public class CollapsedPanel : Panel
     {
+        const int CollapsedHeight = 24;
+
         [Browsable(true)]
         public override string Text { get => Title.Text; set => Title.Text = value; }
 
         Label Title = new();
         Button Collapse = new();
 
-        public int NormalHeight { get; set; }
+        public int ContentHeight { get; set; }
 
         bool collapsed = false;
         public bool Collapsed 
@@ -36,13 +38,13 @@ namespace RainState.Controls
                         if (c != Title && c != Collapse)
                             c.Visible = false;
 
-                    NormalHeight = Height;
-                    Height = 24;
+                    ContentHeight = Height - CollapsedHeight;
+                    Height = CollapsedHeight;
                     Collapse.BackgroundImage = Icons.Icons.ArrowDown16;
                 }
                 else 
                 {
-                    Height = NormalHeight;
+                    Height = ContentHeight + CollapsedHeight;
 
                     foreach (Control c in Controls)
                         if (c != Title && c != Collapse)
