@@ -28,7 +28,9 @@ namespace RainState.Forms
         {
             ["save"] = "Save file",
             ["save__Backup"] = "Save file backup",
-            ["options"] = "Game options"
+            ["options"] = "Game options",
+            ["ArenaSetup"] = "Arena setup",
+            ["core"] = "Expeditions data",
         };
 
         public MainForm()
@@ -108,8 +110,6 @@ namespace RainState.Forms
                         RainWorldData.SetRainWorldPath(Path.GetDirectoryName(ofd.FileName));
                 }
 
-                Text = "RainState: Building UI...";
-
                 InitializeUI();
             }
             finally
@@ -162,35 +162,56 @@ namespace RainState.Forms
 
         void InitializeUI()
         {
+            Text = "RainState: Building UI...";
             WatchArrays = new(0);
             MainTagController.BindArray(WatchArrays);
             BuildUI();
+            Text = "RainState: Binding UI...";
             TagWatchController.InitializeControllers(MainTagController);
+            Text = "RainState: Refreshing UI...";
             ITagControl.RefreshControls(CurrentFile?.MainTag, MainTagController);
         }
 
         void BuildUI()
         {
-            List<(string, Control)> uiGroups = new()
+            if (CurrentFile is null)
+                return;
+
+            List<(string, Control)> uiGroups = new();
+
+            if (CurrentFile?.NewFormatTag is null || CurrentFile.NewFormatTag.Key == "save" || CurrentFile.NewFormatTag.Key == "save__Backup")
             {
-                ("Misc progression data",   new StateSections.MiscProg()),
-                ("Unlocks",                 new StateSections.Unlocks()),
-                ("Lore",                    new StateSections.Lore()),
-                ("More Slugcats",           new StateSections.MoreSlugcats())
-            };
+                uiGroups.Add(("Misc progression data", new StateSections.MiscProg()));
+                uiGroups.Add(("Unlocks", new StateSections.Unlocks()));
+                uiGroups.Add(("Lore", new StateSections.Lore()));
+                uiGroups.Add(("More Slugcats", new StateSections.MoreSlugcats()));
+            }
 
             SectionsStack.Controls.Clear();
 
-            foreach (var (name, control) in uiGroups)
+            if (uiGroups.Count == 0)
             {
-                CollapsedPanel panel = new();
-                panel.Text = name;
-                panel.Collapsed = true;
-                panel.ContentHeight = control.Height;
-                control.Dock = DockStyle.Fill;
-                panel.Controls.Add(control);
+                SectionsStack.Controls.Add(new Label 
+                {
+                    AutoSize = false,
+                    Height = 40,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Text = "No editor UI is registered for this type of file"
+                });
+            }
+            else
+            {
+                foreach (var (name, control) in uiGroups)
+                {
+                    CollapsedPanel panel = new();
+                    panel.Text = name;
+                    panel.Collapsed = true;
+                    panel.ContentHeight = control.Height;
+                    control.Dock = DockStyle.Fill;
+                    panel.Controls.Add(control);
 
-                SectionsStack.Controls.Add(panel);
+                    SectionsStack.Controls.Add(panel);
+                }
             }
         }
 
