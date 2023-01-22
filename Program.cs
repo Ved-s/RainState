@@ -17,12 +17,6 @@ namespace RainState
         [STAThread]
         public static void Main()
         {
-            //string p = "ts@TEST[ts$/@SUB1/#15,ts$/@SUB2/#15]";
-            //foreach (var qp in new TagQueryPathEnumerator(p))
-            //{
-            //    Console.WriteLine(qp);
-            //}
-
             Application.EnableVisualStyles();
             Application.Run(new MainForm());
         }

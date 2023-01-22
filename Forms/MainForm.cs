@@ -59,12 +59,18 @@ namespace RainState.Forms
 
                 if (dialog.ShowDialog() != DialogResult.OK)
                     return;
-
+                
                 Text = "RainState: Reading file...";
 
                 string savefile = File.ReadAllText(dialog.FileName);
                 CurrentFile = StateFile.Load(savefile, names => 
                 {
+                    if (!names.Any())
+                    {
+                        MessageBox.Show("File is empty.\nRainState currently does not support file creation.\nTry opening another file with some progress.", "Error", MessageBoxButtons.OK);
+                        return null;
+                    }
+
                     if (names.Count() <= 1)
                         return names.First();
                     return StringSelector.ShowDialog("Select save file to load", names, name => 
