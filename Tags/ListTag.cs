@@ -119,7 +119,7 @@ namespace RainState.Tags
             for (int i = 0; i < Tags.Count; i++)
             {
                 Tag? tag = Tags[i];
-                if (tag is null || tag.TagId != tagId)
+                if (tag is null || tagId != "" && tag.TagId != "" && tag.TagId != tagId)
                     continue;
 
                 if (tag.Name != name)

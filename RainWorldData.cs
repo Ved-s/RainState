@@ -2,11 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace RainState
 {
@@ -159,55 +157,72 @@ namespace RainState
             if (RWAssembly is null)
                 return;
 
-            string[]? LoadExtEnum(Type? type)
+            Dictionary<string, Action<IEnumerable<string>?>> extEnumHandlers = new()
             {
-                if (type is null)
-                    return null;
+                ["LevelUnlockID"] = tokens => LevelUnlocks = tokens?.ToArray(),
+                ["SandboxUnlockID"] = tokens => SandboxUnlocks = tokens?.ToArray(),
+                ["SafariUnlockID"] = tokens => SafariUnlocks = tokens?.ToArray(),
+                ["SlugcatUnlockID"] = tokens => SlugcatUnlocks = tokens?.ToArray(),
+                ["DataPearlType"] = tokens => LorePearls = tokens?.ToArray(),
+                ["ChatlogID"] = tokens => Broadcasts = tokens?.ToArray(),
+                ["Name"] = tokens =>
+                {
+                    AllSlugcats = tokens?.ToArray();
+                    PlayableSlugcats = tokens?.Where(t => t != "Night" && t != "Inv" && t != "Slugpup" && !t.StartsWith("JollyPlayer")).ToArray();
+                }
+            };
 
-                List<string> values = new();
+            Dictionary<string, HashSet<string>> extEnumValues = new();
+
+            void ScanType(Type type)
+            {
                 foreach (FieldInfo field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
                 {
+                    if (!extEnumHandlers.ContainsKey(field.FieldType.Name))
+                        continue;
+
+                    if (!extEnumValues.TryGetValue(field.FieldType.Name, out HashSet<string>? values))
+                    {
+                        values = new();
+                        extEnumValues[field.FieldType.Name] = values;
+                    }
+
                     FieldInfo? valueField = field.FieldType.GetField("value");
                     if (valueField is null || valueField.FieldType != typeof(string))
                         continue;
 
                     object? value = field.GetValue(null);
+
+                    if (value is null)
+                    {
+                        MethodInfo? registerMethod = type.GetMethod("RegisterValues");
+                        if (registerMethod is not null && registerMethod.IsStatic && registerMethod.GetParameters().Length == 0)
+                        {
+                            registerMethod.Invoke(null, null);
+                            value = field.GetValue(null);
+                        }
+                    }
+
                     if (value is null)
                         continue;
 
                     values.Add((string)valueField.GetValue(value)!);
                 }
 
-                return values.ToArray();
+                foreach (Type nested in type.GetNestedTypes())
+                    ScanType(nested);
             }
 
-            Type? multiplayerUnlocks = RWAssembly.GetType("MultiplayerUnlocks");
-            if (multiplayerUnlocks is not null)
+            foreach (Type type in RWAssembly.GetExportedTypes())
+                ScanType(type);
+
+            foreach (var (type, handler) in extEnumHandlers)
             {
-                LevelUnlocks = LoadExtEnum(multiplayerUnlocks.GetNestedType("LevelUnlockID"));
-                SandboxUnlocks = LoadExtEnum(multiplayerUnlocks.GetNestedType("SandboxUnlockID"));
-                SafariUnlocks = LoadExtEnum(multiplayerUnlocks.GetNestedType("SafariUnlockID"));
-                SlugcatUnlocks = LoadExtEnum(multiplayerUnlocks.GetNestedType("SlugcatUnlockID"));
+                if (extEnumValues.TryGetValue(type, out HashSet<string>? values))
+                    handler(values);
+                else
+                    handler(null);
             }
-
-            LorePearls = LoadExtEnum(RWAssembly.GetType("DataPearl+AbstractDataPearl+DataPearlType"));
-            Broadcasts = LoadExtEnum(RWAssembly.GetType("MoreSlugcats.ChatlogData+ChatlogID"));
-
-
-            var slugcatsrw = LoadExtEnum(RWAssembly.GetType("SlugcatStats+Name"));
-            RWAssembly.GetType("MoreSlugcats.MoreSlugcatsEnums+SlugcatStatsName")?.GetMethod("RegisterValues")?.Invoke(null, null);
-            var slugcatsmsc = LoadExtEnum(RWAssembly.GetType("MoreSlugcats.MoreSlugcatsEnums+SlugcatStatsName"));
-
-            List<string> slugcats = new();
-            if (slugcatsrw is not null) slugcats.AddRange(slugcatsrw);
-            if (slugcatsmsc is not null) slugcats.AddRange(slugcatsmsc);
-
-            AllSlugcats = slugcats.ToArray();
-
-            slugcats.Remove("Night");
-            slugcats.Remove("Inv");
-            slugcats.Remove("Slugpup");
-            PlayableSlugcats = slugcats.ToArray();
         }
 
         public record Region(string Id, string? Name);

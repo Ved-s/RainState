@@ -143,7 +143,7 @@ namespace RainState.Tags
                 if (!create)
                     return null!;
 
-                t = Convert<T>(this, Value, Value?.TagId ?? TagId, Value?.Name ?? name);
+                t = Convert<T>(this, Value, tagId != "" ? tagId : Value?.TagId ?? TagId, name != "" ? name : Value?.Name ?? "");
                 Value = t;
             }
 
