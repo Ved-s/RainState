@@ -157,7 +157,7 @@ namespace RainState.Forms
 
         internal void TagChanged(Tag tag)
         {
-            WatchArrays.TagChanged(tag);
+            WatchArrays?.TagChanged(tag);
         }
 
         void InitializeUI()

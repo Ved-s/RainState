@@ -60,9 +60,9 @@ namespace RainState.Tags
             return Value;
         }
 
-        public override T GetTag<T>(string tagId, string name, bool create)
+        public override T GetTag<T>(string tagId, string name, bool create, string[]? filters)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Cannot query on string value");
         }
     }
 }

@@ -136,9 +136,9 @@ namespace RainState.Tags
             return $"{Key}: {Value}";
         }
 
-        public override T GetTag<T>(string tagId, string name, bool create)
+        public override T GetTag<T>(string tagId, string name, bool create, string[]? filters)
         {
-            if (Value is not T t)
+            if (Value is not T t || tagId != "" && Value.TagId != "" && Value.TagId != tagId || name != "" && Value.Name != name)
             {
                 if (!create)
                     return null!;
@@ -147,6 +147,9 @@ namespace RainState.Tags
                 Value = t;
             }
 
+            if (filters is not null)
+                if (!t.MatchFilters(filters, create))
+                    return null!;
             return t;
         }
 

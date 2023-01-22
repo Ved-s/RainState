@@ -43,7 +43,7 @@ namespace RainState.Tags
 
         public abstract void Serialize(StringBuilder builder);
         protected abstract TreeNode CreateTreeNodeInternal();
-        public abstract T? GetTag<T>(string tagId, string name, bool create) where T : Tag;
+        public abstract T? GetTag<T>(string tagId, string name, bool create, string[]? filters) where T : Tag;
 
         public virtual bool TryConvert<T>(out T newTag) where T : Tag
         {
@@ -73,9 +73,9 @@ namespace RainState.Tags
 
                 tag = tagelement.Type switch
                 {
-                    TagType.Pair =>  tag.GetTag<KeyValueTag>(tagelement.Id, tagelement.Name, create),
-                    TagType.List =>  tag.GetTag<ListTag>    (tagelement.Id, tagelement.Name, create),
-                    TagType.Value => tag.GetTag<ValueTag>   (tagelement.Id, tagelement.Name, create),
+                    TagType.Pair =>  tag.GetTag<KeyValueTag>(tagelement.Id, tagelement.Name, create, tagelement.Filters),
+                    TagType.List =>  tag.GetTag<ListTag>    (tagelement.Id, tagelement.Name, create, tagelement.Filters),
+                    TagType.Value => tag.GetTag<ValueTag>   (tagelement.Id, tagelement.Name, create, tagelement.Filters),
                     _ => throw new InvalidDataException($"Invalid tag type from query enumerator: {tagelement.Type}")
                 };
             }
@@ -131,6 +131,14 @@ namespace RainState.Tags
                 return false;
 
             return Parent?.MatchQuery(path[..^1], searchMatchingParent) ?? !searchMatchingParent;
+        }
+
+        public bool MatchFilters(string[] filters, bool create = false)
+        {
+            foreach (string filter in filters)
+                if (QueryTag(filter, create) is null)
+                    return false;
+            return true;
         }
 
         public static T Convert<T>(Tag? parent, Tag? tag, string tagId, string name) where T : Tag

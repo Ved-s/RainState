@@ -114,7 +114,7 @@ namespace RainState.Tags
             return node;
         }
 
-        public override T GetTag<T>(string tagId, string name, bool create)
+        public override T GetTag<T>(string tagId, string name, bool create, string[]? filters)
         {
             for (int i = 0; i < Tags.Count; i++)
             {
@@ -125,8 +125,12 @@ namespace RainState.Tags
                 if (tag.Name != name)
                     continue;
 
+                if (filters is not null && !tag.MatchFilters(filters, false))
+                    continue;
+
                 if (tag is T t)
                     return t;
+
                 else if (!create)
                     continue;
 
@@ -138,6 +142,8 @@ namespace RainState.Tags
                 return null!;
 
             T newTag = Convert<T>(this, null, tagId, name);
+            if (filters is not null)
+                newTag.MatchFilters(filters, create);
             Tags.Add(newTag);
             return newTag;
         }
