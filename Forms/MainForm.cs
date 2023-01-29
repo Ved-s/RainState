@@ -88,17 +88,14 @@ namespace RainState.Forms
 
                 Text = "RainState: Building tag tree...";
 
-                TreeNode node = CurrentFile.MainTag.CreateTreeNode();
+                TreeNode node = CurrentFile.MainTag.CreateTreeNode(false);
+
+                if (node.Text == "")
+                    node.Text = CurrentFile.NewFormatTag?.Key ?? Path.GetFileName(CurrentFilePath);
 
                 StateTree.Nodes.Clear();
-                if (node.Nodes.Count > 0)
-                    foreach (TreeNode child in node.Nodes.Cast<TreeNode>().ToArray())
-                    {
-                        node.Nodes.Remove(child);
-                        StateTree.Nodes.Add(child);
-                    }
-                else
-                    StateTree.Nodes.Add(node);
+                StateTree.Nodes.Add(node);
+                node.Expand();
 
                 Menu_Save.Enabled = true;
                 Menu_SaveAs.Enabled = true;
@@ -160,6 +157,10 @@ namespace RainState.Forms
             using FileStream fs = File.Create(dialog.FileName);
             CurrentFile.Save(fs);
         }
+        private void Menu_ManualQuery_Click(object sender, EventArgs e)
+        {
+            QueryForm.Show();
+        }
 
         internal void TagChanged(Tag tag)
         {
@@ -190,6 +191,10 @@ namespace RainState.Forms
                 uiGroups.Add(("Unlocks", new StateSections.Unlocks()));
                 uiGroups.Add(("Lore", new StateSections.Lore()));
                 uiGroups.Add(("More Slugcats", new StateSections.MoreSlugcats()));
+
+                if (RainWorldData.PlayableSlugcats is not null)
+                    foreach (string slugcat in RainWorldData.PlayableSlugcats)
+                        uiGroups.Add(($"{slugcat} playthrough", new StateSections.SaveState(slugcat))); 
             }
 
             SectionsStack.Controls.Clear();
@@ -230,5 +235,6 @@ namespace RainState.Forms
             public override Color MenuItemSelectedGradientBegin => Color.FromArgb(64, 64, 64);
             public override Color MenuItemSelectedGradientEnd   => Color.FromArgb(64, 64, 64);
         }
+
     }
 }

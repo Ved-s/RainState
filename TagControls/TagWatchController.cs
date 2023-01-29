@@ -63,12 +63,12 @@ namespace RainState.TagControls
             OnRefresh?.Invoke(parent);
         }
 
-        public Tag? GetTag()
+        public Tag? GetTag(bool create = true)
         {
             if (MainController)
                 return MainForm.Instance.CurrentFile?.MainTag;
 
-            return Controller?.GetTag()?.QueryTag(watchQuery, false);
+            return Controller?.GetTag()?.QueryTag(watchQuery, create);
         }
 
         void OnTagChanged(Tag tag)

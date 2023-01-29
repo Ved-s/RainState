@@ -168,7 +168,7 @@ namespace RainState
                 ["Name"] = tokens =>
                 {
                     AllSlugcats = tokens?.ToArray();
-                    PlayableSlugcats = tokens?.Where(t => t != "Night" && t != "Inv" && t != "Slugpup" && !t.StartsWith("JollyPlayer")).ToArray();
+                    PlayableSlugcats = tokens?.Where(t => t != "Night" && t != "Slugpup" && !t.StartsWith("JollyPlayer")).ToArray();
                 }
             };
 

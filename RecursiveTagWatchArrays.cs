@@ -1,5 +1,6 @@
 ﻿using RainState.Tags;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RainState
 {
@@ -24,7 +25,7 @@ namespace RainState
                 string name = watcher.WatchQuery.Elements[i].Name;
                 if (!target.NextArrays.TryGetValue(name, out RecursiveTagWatchArrays? arrays))
                 {
-                    arrays = new(ParentLevel + 1);
+                    arrays = new(ParentLevel + 1); 
                     target.NextArrays[name] = arrays;
                 }
                 target = arrays;

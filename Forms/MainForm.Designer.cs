@@ -38,12 +38,12 @@ namespace RainState.Forms
             this.Menu_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_SaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.Menu_ManualQuery = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.SplitH)).BeginInit();
             this.SplitH.Panel1.SuspendLayout();
             this.SplitH.Panel2.SuspendLayout();
             this.SplitH.SuspendLayout();
             this.MainTagController.SuspendLayout();
-            this.SectionsStack.SuspendLayout();
             this.Menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -102,7 +102,8 @@ namespace RainState.Forms
             this.Menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Menu_Open,
             this.Menu_Save,
-            this.Menu_SaveAs});
+            this.Menu_SaveAs,
+            this.Menu_ManualQuery});
             this.Menu.Location = new System.Drawing.Point(0, 0);
             this.Menu.Name = "Menu";
             this.Menu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -133,6 +134,14 @@ namespace RainState.Forms
             this.Menu_SaveAs.Text = "Save As";
             this.Menu_SaveAs.Click += new System.EventHandler(this.Menu_SaveAs_Click);
             // 
+            // Menu_ManualQuery
+            // 
+            this.Menu_ManualQuery.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.Menu_ManualQuery.Name = "Menu_ManualQuery";
+            this.Menu_ManualQuery.Size = new System.Drawing.Size(94, 20);
+            this.Menu_ManualQuery.Text = "Manual Query";
+            this.Menu_ManualQuery.Click += new System.EventHandler(this.Menu_ManualQuery_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -150,7 +159,6 @@ namespace RainState.Forms
             ((System.ComponentModel.ISupportInitialize)(this.SplitH)).EndInit();
             this.SplitH.ResumeLayout(false);
             this.MainTagController.ResumeLayout(false);
-            this.SectionsStack.ResumeLayout(false);
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
             this.ResumeLayout(false);
@@ -168,5 +176,6 @@ namespace RainState.Forms
         private System.Windows.Forms.ToolStripMenuItem Menu_SaveAs;
         private TagWatchController MainTagController;
         private Controls.StackPanel SectionsStack;
+        private System.Windows.Forms.ToolStripMenuItem Menu_ManualQuery;
     }
 }

@@ -99,32 +99,31 @@ namespace RainState.Tags
             Value?.Serialize(builder);
         }
 
-        protected override TreeNode CreateTreeNodeInternal()
+        protected override TreeNode CreateTreeNodeInternal(bool readOnly)
         {
-            TreeNode value = Value?.CreateTreeNode() ?? new TreeNode();
+            TreeNode value = Value?.CreateTreeNode(readOnly) ?? new TreeNode();
 
-            //if (Value is ValueTag)
-            //    Debugger.Break();
-
-            value.ContextMenuStrip ??= new();
-
-            value.ContextMenuStrip.Items.Add("Edit name", null, (_, _) => 
+            if (!readOnly)
             {
-                StringEditDialogue.ShowDialog(Key, k => Key = k);
-            }).Tag = ("name", this);
+                value.ContextMenuStrip ??= new();
 
-            value.ContextMenuStrip.Opening += (sender, _) =>
-            {
-                if (sender is ContextMenuStrip strip)
-                    foreach (ToolStripItem item in strip.Items)
-                    {
-                        if (item.Tag is (string type, KeyValueTag tag) && type == "name" && tag == this)
+                value.ContextMenuStrip.Items.Add("Edit name", null, (_, _) =>
+                {
+                    StringEditDialogue.ShowDialog(Key, k => Key = k);
+                }).Tag = ("name", this);
+
+                value.ContextMenuStrip.Opening += (sender, _) =>
+                {
+                    if (sender is ContextMenuStrip strip)
+                        foreach (ToolStripItem item in strip.Items)
                         {
-                            item.Text = $"Edit name ({Key})";
+                            if (item.Tag is (string type, KeyValueTag tag) && type == "name" && tag == this)
+                            {
+                                item.Text = $"Edit name ({Key})";
+                            }
                         }
-                    }
-            };
-
+                };
+            }
             value.Text = DisplayName.ConstrainLength(64, 256);
             return value;
         }

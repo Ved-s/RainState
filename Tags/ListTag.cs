@@ -48,7 +48,7 @@ namespace RainState.Tags
                     if (Tags[^1] is not null)
                     {
                         Tag tag = Tags[^1]!;
-                        TreeNode tagNode = tag.CreateTreeNode();
+                        TreeNode tagNode = tag.CreateTreeNode(false);
                         AddContextMenus(tagNode, tag);
                         TreeNode.Nodes.Add(tagNode);
                     }
@@ -74,7 +74,7 @@ namespace RainState.Tags
                     foreach (Tag? tag in Tags)
                         if (tag is not null)
                         {
-                            TreeNode tagNode = tag.CreateTreeNode();
+                            TreeNode tagNode = tag.CreateTreeNode(false);
                             AddContextMenus(tagNode, tag);
                             TreeNode.Nodes.Add(tagNode);
                         }
@@ -97,15 +97,16 @@ namespace RainState.Tags
             }
         }
 
-        protected override TreeNode CreateTreeNodeInternal()
+        protected override TreeNode CreateTreeNodeInternal(bool readOnly)
         {
             TreeNode node = new();
 
             foreach (Tag? tag in Tags)
                 if (tag is not null)
                 {
-                    TreeNode tagNode = tag.CreateTreeNode();
-                    AddContextMenus(tagNode, tag);
+                    TreeNode tagNode = tag.CreateTreeNode(readOnly);
+                    if (!readOnly)
+                        AddContextMenus(tagNode, tag);
                     if (tag is ListTag list && tagNode.Text == "")
                         tagNode.Text = list.Tags.FirstOrDefault(t => t is not null)?.Name ?? "";
                     node.Nodes.Add(tagNode);

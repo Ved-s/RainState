@@ -29,9 +29,12 @@ namespace RainState
                     return 0;
 
                 int count = 1;
-                for (int i = 0; i < NextPath.Length; i++)
-                    if (NextPath[i] == '/')
-                        count++;
+                ReadOnlySpan<char> path = NextPath;
+                while (TryGetIndexOf(path, '/', out int pathSep))
+                {
+                    count++;
+                    path = path.Slice(pathSep + 1);
+                }
                 return count;
             }
         }

@@ -36,13 +36,16 @@ namespace RainState.Tags
             TagId = id;
         }
 
-        public TreeNode CreateTreeNode()
+        public TreeNode CreateTreeNode(bool readOnly)
         {
-            return TreeNode = CreateTreeNodeInternal();
+            if (readOnly)
+                return CreateTreeNodeInternal(true);
+
+            return TreeNode = CreateTreeNodeInternal(false);
         }
 
         public abstract void Serialize(StringBuilder builder);
-        protected abstract TreeNode CreateTreeNodeInternal();
+        protected abstract TreeNode CreateTreeNodeInternal(bool readOnly);
         public abstract T? GetTag<T>(string tagId, string name, bool create, string[]? filters) where T : Tag;
 
         public virtual bool TryConvert<T>(out T newTag) where T : Tag

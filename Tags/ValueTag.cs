@@ -1,6 +1,5 @@
 ﻿using RainState.Forms;
 using System;
-using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -42,14 +41,23 @@ namespace RainState.Tags
             builder.Append(Value);
         }
 
-        protected override TreeNode CreateTreeNodeInternal()
+        protected override TreeNode CreateTreeNodeInternal(bool readOnly)
         {
             TreeNode node = new(Value.ConstrainLength(64, 256));
 
             node.ContextMenuStrip ??= new();
-            node.ContextMenuStrip.Items.Add("Edit value", null, (_, _) =>
+
+            if (!readOnly)
             {
-                StringEditDialogue.ShowDialog(Value, k => Value = k);
+                node.ContextMenuStrip.Items.Add("Edit value", null, (_, _) =>
+                {
+                    StringEditDialogue.ShowDialog(Value, k => Value = k);
+                });
+            }
+
+            node.ContextMenuStrip.Items.Add("Copy value", null, (_, _) =>
+            {
+                Clipboard.SetText(Value);
             });
 
             return node;
