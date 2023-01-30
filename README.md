@@ -10,3 +10,7 @@ Full list of lore pearls and broadcasts
 More Slugcats unlocks (slugcat completions)
 
 Warning! Safari unlocks are still broken, they can break Arena menu
+
+### Download
+
+Latest autobuild can be downloaded [here](https://nightly.link/Ved-s/RainState/workflows/dotnet/master/Build.zip) (powered by nightly.link)
