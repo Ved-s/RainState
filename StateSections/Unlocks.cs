@@ -49,19 +49,20 @@ namespace RainState.StateSections
         private void InitializeComponent()
         {
             this.MiscprogController = new RainState.TagControls.TagWatchController();
-            this.SandboxTokens = new RainState.TagControls.TokenListCheckBoxes();
-            this.SandboxTokensLabel = new System.Windows.Forms.Label();
-            this.LevelTokens = new RainState.TagControls.TokenListCheckBoxes();
-            this.LevelTokensLabel = new System.Windows.Forms.Label();
             this.SlugcatTokens = new RainState.TagControls.TokenListCheckBoxes();
+            this.SandboxTokens = new RainState.TagControls.TokenListCheckBoxes();
             this.SlugcatTokensLabel = new System.Windows.Forms.Label();
+            this.SandboxTokensLabel = new System.Windows.Forms.Label();
             this.SafariTokens = new RainState.TagControls.TokenListCheckBoxes();
             this.SafariTokensLabel = new System.Windows.Forms.Label();
+            this.LevelTokens = new RainState.TagControls.TokenListCheckBoxes();
+            this.LevelTokensLabel = new System.Windows.Forms.Label();
             this.MiscprogController.SuspendLayout();
             this.SuspendLayout();
             // 
             // MiscprogController
             // 
+            this.MiscprogController.AutoScroll = true;
             this.MiscprogController.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.MiscprogController.Controller = null;
             this.MiscprogController.Controls.Add(this.SlugcatTokens);
@@ -80,52 +81,6 @@ namespace RainState.StateSections
             this.MiscprogController.TabIndex = 0;
             this.MiscprogController.WatchQuery = "progDiv@MISCPROG/mpd$";
             // 
-            // SandboxTokens
-            // 
-            this.SandboxTokens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SandboxTokens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
-            this.SandboxTokens.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.SandboxTokens.Controller = null;
-            this.SandboxTokens.Location = new System.Drawing.Point(3, 160);
-            this.SandboxTokens.Name = "SandboxTokens";
-            this.SandboxTokens.Size = new System.Drawing.Size(487, 120);
-            this.SandboxTokens.TabIndex = 27;
-            this.SandboxTokens.TagQuery = "mpd@SANDBOXTOKENS/#";
-            // 
-            // SandboxTokensLabel
-            // 
-            this.SandboxTokensLabel.AutoSize = true;
-            this.SandboxTokensLabel.Location = new System.Drawing.Point(0, 143);
-            this.SandboxTokensLabel.Name = "SandboxTokensLabel";
-            this.SandboxTokensLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.SandboxTokensLabel.Size = new System.Drawing.Size(137, 15);
-            this.SandboxTokensLabel.TabIndex = 28;
-            this.SandboxTokensLabel.Text = "Unlocked sandbox items";
-            // 
-            // LevelTokens
-            // 
-            this.LevelTokens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.LevelTokens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
-            this.LevelTokens.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.LevelTokens.Controller = null;
-            this.LevelTokens.Location = new System.Drawing.Point(3, 20);
-            this.LevelTokens.Name = "LevelTokens";
-            this.LevelTokens.Size = new System.Drawing.Size(487, 120);
-            this.LevelTokens.TabIndex = 25;
-            this.LevelTokens.TagQuery = "mpd@LEVELTOKENS/#";
-            // 
-            // LevelTokensLabel
-            // 
-            this.LevelTokensLabel.AutoSize = true;
-            this.LevelTokensLabel.Location = new System.Drawing.Point(0, 3);
-            this.LevelTokensLabel.Name = "LevelTokensLabel";
-            this.LevelTokensLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.LevelTokensLabel.Size = new System.Drawing.Size(94, 15);
-            this.LevelTokensLabel.TabIndex = 26;
-            this.LevelTokensLabel.Text = "Unlocked arenas";
-            // 
             // SlugcatTokens
             // 
             this.SlugcatTokens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -139,6 +94,19 @@ namespace RainState.StateSections
             this.SlugcatTokens.TabIndex = 31;
             this.SlugcatTokens.TagQuery = "mpd@CLASSTOKENS/#";
             // 
+            // SandboxTokens
+            // 
+            this.SandboxTokens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SandboxTokens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
+            this.SandboxTokens.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SandboxTokens.Controller = null;
+            this.SandboxTokens.Location = new System.Drawing.Point(3, 160);
+            this.SandboxTokens.Name = "SandboxTokens";
+            this.SandboxTokens.Size = new System.Drawing.Size(487, 120);
+            this.SandboxTokens.TabIndex = 27;
+            this.SandboxTokens.TagQuery = "mpd@SANDBOXTOKENS/#";
+            // 
             // SlugcatTokensLabel
             // 
             this.SlugcatTokensLabel.AutoSize = true;
@@ -148,6 +116,16 @@ namespace RainState.StateSections
             this.SlugcatTokensLabel.Size = new System.Drawing.Size(137, 15);
             this.SlugcatTokensLabel.TabIndex = 32;
             this.SlugcatTokensLabel.Text = "Unlocked slugcat classes";
+            // 
+            // SandboxTokensLabel
+            // 
+            this.SandboxTokensLabel.AutoSize = true;
+            this.SandboxTokensLabel.Location = new System.Drawing.Point(0, 143);
+            this.SandboxTokensLabel.Name = "SandboxTokensLabel";
+            this.SandboxTokensLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.SandboxTokensLabel.Size = new System.Drawing.Size(137, 15);
+            this.SandboxTokensLabel.TabIndex = 28;
+            this.SandboxTokensLabel.Text = "Unlocked sandbox items";
             // 
             // SafariTokens
             // 
@@ -171,6 +149,29 @@ namespace RainState.StateSections
             this.SafariTokensLabel.Size = new System.Drawing.Size(88, 15);
             this.SafariTokensLabel.TabIndex = 30;
             this.SafariTokensLabel.Text = "Unlocked safari";
+            // 
+            // LevelTokens
+            // 
+            this.LevelTokens.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LevelTokens.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
+            this.LevelTokens.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.LevelTokens.Controller = null;
+            this.LevelTokens.Location = new System.Drawing.Point(3, 20);
+            this.LevelTokens.Name = "LevelTokens";
+            this.LevelTokens.Size = new System.Drawing.Size(487, 120);
+            this.LevelTokens.TabIndex = 25;
+            this.LevelTokens.TagQuery = "mpd@LEVELTOKENS/#";
+            // 
+            // LevelTokensLabel
+            // 
+            this.LevelTokensLabel.AutoSize = true;
+            this.LevelTokensLabel.Location = new System.Drawing.Point(0, 3);
+            this.LevelTokensLabel.Name = "LevelTokensLabel";
+            this.LevelTokensLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.LevelTokensLabel.Size = new System.Drawing.Size(94, 15);
+            this.LevelTokensLabel.TabIndex = 26;
+            this.LevelTokensLabel.Text = "Unlocked arenas";
             // 
             // Unlocks
             // 

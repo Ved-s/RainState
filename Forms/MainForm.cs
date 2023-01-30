@@ -185,6 +185,8 @@ namespace RainState.Forms
 
             List<(string, Control)> uiGroups = new();
 
+            StateSwitch.ClearTabs();
+
             if (CurrentFile?.NewFormatTag is null || CurrentFile.NewFormatTag.Key == "save" || CurrentFile.NewFormatTag.Key == "save__Backup")
             {
                 uiGroups.Add(("Misc progression data", new StateSections.MiscProg()));
@@ -197,30 +199,18 @@ namespace RainState.Forms
                         uiGroups.Add(($"{slugcat} playthrough", new StateSections.SaveState(slugcat))); 
             }
 
-            SectionsStack.Controls.Clear();
-
             if (uiGroups.Count == 0)
             {
-                SectionsStack.Controls.Add(new Label 
-                {
-                    AutoSize = false,
-                    Height = 40,
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    Text = "No editor UI is registered for this type of file"
-                });
+                StateSwitch.Visible = false;
+                NoStatesLabel.Visible = true;
             }
             else
             {
+                StateSwitch.Visible = true;
+                NoStatesLabel.Visible = false;
                 foreach (var (name, control) in uiGroups)
                 {
-                    CollapsedPanel panel = new();
-                    panel.Text = name;
-                    panel.Collapsed = true;
-                    panel.ContentHeight = control.Height;
-                    control.Dock = DockStyle.Fill;
-                    panel.Controls.Add(control);
-
-                    SectionsStack.Controls.Add(panel);
+                    StateSwitch.AddTab(name, control);
                 }
             }
         }

@@ -41,22 +41,23 @@ namespace RainState.StateSections
 
         private void InitializeComponent()
         {
-            this.MiscprogController = new TagWatchController();
-            this.LoreFut = new TokenListCheckBoxes();
-            this.LoreP = new TokenListCheckBoxes();
-            this.LoreFutLabel = new Label();
-            this.LorePLabel = new Label();
-            this.LoreDM = new TokenListCheckBoxes();
-            this.LoreDMLabel = new Label();
-            this.LorePearls = new TokenListCheckBoxes();
-            this.LoreLabel = new Label();
-            this.Broadcasts = new TokenListCheckBoxes();
-            this.BroadcastsLabel = new Label();
+            this.MiscprogController = new RainState.TagControls.TagWatchController();
+            this.Broadcasts = new RainState.TagControls.TokenListCheckBoxes();
+            this.BroadcastsLabel = new System.Windows.Forms.Label();
+            this.LoreFut = new RainState.TagControls.TokenListCheckBoxes();
+            this.LoreP = new RainState.TagControls.TokenListCheckBoxes();
+            this.LoreFutLabel = new System.Windows.Forms.Label();
+            this.LorePLabel = new System.Windows.Forms.Label();
+            this.LoreDM = new RainState.TagControls.TokenListCheckBoxes();
+            this.LoreDMLabel = new System.Windows.Forms.Label();
+            this.LorePearls = new RainState.TagControls.TokenListCheckBoxes();
+            this.LoreLabel = new System.Windows.Forms.Label();
             this.MiscprogController.SuspendLayout();
             this.SuspendLayout();
             // 
             // MiscprogController
             // 
+            this.MiscprogController.AutoScroll = true;
             this.MiscprogController.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.MiscprogController.Controller = null;
             this.MiscprogController.Controls.Add(this.Broadcasts);
@@ -77,9 +78,32 @@ namespace RainState.StateSections
             this.MiscprogController.TabIndex = 0;
             this.MiscprogController.WatchQuery = "progDiv@MISCPROG/mpd$";
             // 
+            // Broadcasts
+            // 
+            this.Broadcasts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Broadcasts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
+            this.Broadcasts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Broadcasts.Controller = null;
+            this.Broadcasts.Location = new System.Drawing.Point(3, 580);
+            this.Broadcasts.Name = "Broadcasts";
+            this.Broadcasts.Size = new System.Drawing.Size(487, 120);
+            this.Broadcasts.TabIndex = 33;
+            this.Broadcasts.TagQuery = "mpd@BROADCASTS/#";
+            // 
+            // BroadcastsLabel
+            // 
+            this.BroadcastsLabel.AutoSize = true;
+            this.BroadcastsLabel.Location = new System.Drawing.Point(0, 563);
+            this.BroadcastsLabel.Name = "BroadcastsLabel";
+            this.BroadcastsLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.BroadcastsLabel.Size = new System.Drawing.Size(124, 15);
+            this.BroadcastsLabel.TabIndex = 34;
+            this.BroadcastsLabel.Text = "Broadcasts discovered";
+            // 
             // LoreFut
             // 
-            this.LoreFut.Anchor = ((AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.LoreFut.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LoreFut.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.LoreFut.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -92,7 +116,7 @@ namespace RainState.StateSections
             // 
             // LoreP
             // 
-            this.LoreP.Anchor = ((AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.LoreP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LoreP.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.LoreP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -125,7 +149,7 @@ namespace RainState.StateSections
             // 
             // LoreDM
             // 
-            this.LoreDM.Anchor = ((AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.LoreDM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LoreDM.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.LoreDM.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -148,7 +172,7 @@ namespace RainState.StateSections
             // 
             // LorePearls
             // 
-            this.LorePearls.Anchor = ((AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.LorePearls.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LorePearls.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.LorePearls.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -168,29 +192,6 @@ namespace RainState.StateSections
             this.LoreLabel.Size = new System.Drawing.Size(126, 15);
             this.LoreLabel.TabIndex = 26;
             this.LoreLabel.Text = "Lore pearls deciphered";
-            // 
-            // Broadcasts
-            // 
-            this.Broadcasts.Anchor = ((AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Broadcasts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
-            this.Broadcasts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Broadcasts.Controller = null;
-            this.Broadcasts.Location = new System.Drawing.Point(3, 580);
-            this.Broadcasts.Name = "Broadcasts";
-            this.Broadcasts.Size = new System.Drawing.Size(487, 120);
-            this.Broadcasts.TabIndex = 33;
-            this.Broadcasts.TagQuery = "mpd@BROADCASTS/#";
-            // 
-            // BroadcastsLabel
-            // 
-            this.BroadcastsLabel.AutoSize = true;
-            this.BroadcastsLabel.Location = new System.Drawing.Point(0, 563);
-            this.BroadcastsLabel.Name = "BroadcastsLabel";
-            this.BroadcastsLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.BroadcastsLabel.Size = new System.Drawing.Size(124, 15);
-            this.BroadcastsLabel.TabIndex = 34;
-            this.BroadcastsLabel.Text = "Broadcasts discovered";
             // 
             // Lore
             // 

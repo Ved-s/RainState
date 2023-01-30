@@ -33,12 +33,13 @@ namespace RainState.Forms
             this.StateTree = new System.Windows.Forms.TreeView();
             this.SplitH = new System.Windows.Forms.SplitContainer();
             this.MainTagController = new RainState.TagControls.TagWatchController();
-            this.SectionsStack = new RainState.Controls.StackPanel();
+            this.StateSwitch = new RainState.Controls.TabSwitch();
             this.Menu = new System.Windows.Forms.MenuStrip();
             this.Menu_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_SaveAs = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu_ManualQuery = new System.Windows.Forms.ToolStripMenuItem();
+            this.NoStatesLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.SplitH)).BeginInit();
             this.SplitH.Panel1.SuspendLayout();
             this.SplitH.Panel2.SuspendLayout();
@@ -77,7 +78,8 @@ namespace RainState.Forms
             // MainTagController
             // 
             this.MainTagController.Controller = null;
-            this.MainTagController.Controls.Add(this.SectionsStack);
+            this.MainTagController.Controls.Add(this.StateSwitch);
+            this.MainTagController.Controls.Add(this.NoStatesLabel);
             this.MainTagController.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTagController.Location = new System.Drawing.Point(0, 0);
             this.MainTagController.MainController = false;
@@ -86,15 +88,16 @@ namespace RainState.Forms
             this.MainTagController.TabIndex = 0;
             this.MainTagController.WatchQuery = "";
             // 
-            // SectionsStack
+            // StateSwitch
             // 
-            this.SectionsStack.AutoScroll = true;
-            this.SectionsStack.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SectionsStack.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.SectionsStack.Location = new System.Drawing.Point(0, 0);
-            this.SectionsStack.Name = "SectionsStack";
-            this.SectionsStack.Size = new System.Drawing.Size(513, 397);
-            this.SectionsStack.TabIndex = 1;
+            this.StateSwitch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.StateSwitch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StateSwitch.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.StateSwitch.Location = new System.Drawing.Point(0, 0);
+            this.StateSwitch.Name = "StateSwitch";
+            this.StateSwitch.Size = new System.Drawing.Size(513, 397);
+            this.StateSwitch.TabIndex = 0;
+            this.StateSwitch.Visible = false;
             // 
             // Menu
             // 
@@ -142,6 +145,17 @@ namespace RainState.Forms
             this.Menu_ManualQuery.Text = "Manual Query";
             this.Menu_ManualQuery.Click += new System.EventHandler(this.Menu_ManualQuery_Click);
             // 
+            // NoStatesLabel
+            // 
+            this.NoStatesLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.NoStatesLabel.Location = new System.Drawing.Point(0, 0);
+            this.NoStatesLabel.Name = "NoStatesLabel";
+            this.NoStatesLabel.Size = new System.Drawing.Size(513, 397);
+            this.NoStatesLabel.TabIndex = 3;
+            this.NoStatesLabel.Text = "No editor UI is registered for this type of file";
+            this.NoStatesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.NoStatesLabel.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -175,7 +189,8 @@ namespace RainState.Forms
         private System.Windows.Forms.ToolStripMenuItem Menu_Save;
         private System.Windows.Forms.ToolStripMenuItem Menu_SaveAs;
         private TagWatchController MainTagController;
-        private Controls.StackPanel SectionsStack;
         private System.Windows.Forms.ToolStripMenuItem Menu_ManualQuery;
+        private Controls.TabSwitch StateSwitch;
+        private System.Windows.Forms.Label NoStatesLabel;
     }
 }
